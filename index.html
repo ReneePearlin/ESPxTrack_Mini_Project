@@ -3,26 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker</title>
+  <title>Fleet Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="home-body">
-  <div class="blob-bg"></div>
-  <div class="home-container">
-    <h1>Track Your Fleet, Effortlessly</h1>
-    <div class="buttons">
-      <a href="signup.html"><button>Sign Up</button></a>
-      <a href="login.html"><button>Log In</button></a>
-      <button onclick="googleSignIn()">Sign In with Google</button>
-    </div>
+<body>
+  <div id="map"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Fleet Dashboard</h2>
+    <button onclick="showLiveRoutes()">Live Routes</button>
+    <button onclick="showPastRoutes()">Past Routes</button>
+    <button onclick="showGeofencing()">Geofencing</button>
+    <button onclick="showNotifications()">Notifications</button>
+    <button onclick="logout()">Log Out</button>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Center Card for Bus No and Route -->
+  <div class="input-card">
+    <h3>Track a Bus</h3>
+    <input type="text" id="busNumber" placeholder="Enter Bus Number">
+    <input type="text" id="busRoute" placeholder="Enter Bus Route">
+    <button onclick="trackBus()">Track</button>
+  </div>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
-  <!-- Your Firebase config + app logic -->
   <script src="firebase.js"></script>
   <script src="app.js"></script>
+
+  <!-- Google Maps API (replace YOUR_API_KEY) -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+  <script src="maps.js"></script>
 </body>
 </html>
