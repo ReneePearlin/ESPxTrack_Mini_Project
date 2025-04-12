@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard">
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li>Past Routes</li>
+      <li>Live Location</li>
+      <li>Notifications</li>
+      <li>Geofencing</li>
+    </ul>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <div class="content">
+    <div id="map"></div>
+    <div class="bus-inputs">
+      <input type="text" id="busNumber" placeholder="Enter Bus Number" />
+      <input type="text" id="route" placeholder="Enter Route" />
+      <button onclick="trackBus()">Track Bus</button>
+    </div>
+  </div>
+
+  <script src="firebase.js"></script>
+  <script src="maps.js"></script>
+  <script src="app.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
+</body>
+</html>
