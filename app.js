@@ -3,6 +3,7 @@
 function signUp() {
   const email = document.getElementById('email')?.value;
   const password = document.getElementById('password')?.value;
+
   console.log("🚀 Signing up with", email);
 
   firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -19,6 +20,7 @@ function signUp() {
 function logIn() {
   const email = document.getElementById('email')?.value;
   const password = document.getElementById('password')?.value;
+
   console.log("🚀 Logging in with", email);
 
   firebase.auth().signInWithEmailAndPassword(email, password)
