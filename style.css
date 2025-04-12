@@ -1,66 +1,70 @@
-/* General Reset */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  box-sizing: border-box;
-}
+/* MAIN PAGE */
 
-/* Abstract animated background */
-.blob-bg {
-  position: fixed;
-  width: 100%;
+#map {
+  position: absolute;
+  top: 0; left: 0;
   height: 100%;
-  background: linear-gradient(135deg, #ff6ec4, #7873f5);
-  z-index: -1;
+  width: 100%;
+  z-index: 1;
 }
 
-/* Homepage & Auth Styling */
-.home-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200px;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  padding: 20px;
   color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.home-container {
-  text-align: center;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  backdrop-filter: blur(10px);
-  min-width: 300px;
-}
-
-.home-container h1, .home-container h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-input {
+.sidebar button {
   padding: 10px;
-  margin: 10px;
-  width: 80%;
+  background: white;
+  color: #333;
   border: none;
   border-radius: 6px;
-  outline: none;
-}
-
-button {
-  background: white;
-  color: #5a3dfd;
-  padding: 12px 25px;
-  margin: 10px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
-button:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
+.sidebar button:hover {
+  background-color: #ddd;
+}
+
+.input-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 15px;
+  z-index: 3;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 300px;
+}
+
+.input-card input {
+  margin: 10px 0;
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.input-card button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #5a3dfd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
