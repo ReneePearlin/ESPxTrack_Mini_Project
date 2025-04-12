@@ -6,17 +6,16 @@ body, html {
   box-sizing: border-box;
 }
 
-/* Abstract animated blobs */
+/* Abstract animated background */
 .blob-bg {
   position: fixed;
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #ff6ec4, #7873f5);
   z-index: -1;
-  overflow: hidden;
 }
 
-/* Homepage */
+/* Homepage & Auth Styling */
 .home-body {
   display: flex;
   justify-content: center;
@@ -32,14 +31,24 @@ body, html {
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
+  min-width: 300px;
 }
 
-.home-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
+.home-container h1, .home-container h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
-.buttons button {
+input {
+  padding: 10px;
+  margin: 10px;
+  width: 80%;
+  border: none;
+  border-radius: 6px;
+  outline: none;
+}
+
+button {
   background: white;
   color: #5a3dfd;
   padding: 12px 25px;
@@ -51,14 +60,7 @@ body, html {
   transition: 0.3s;
 }
 
-.buttons button:hover {
+button:hover {
   background-color: #f0f0f0;
   transform: translateY(-2px);
-}
-
-/* Optional animation for background */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
 }
