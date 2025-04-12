@@ -1,22 +1,27 @@
-function signIn() {
-  // Redirect to sign-in page if needed
-  alert("Redirect to sign-in page (coming soon)");
+function signUp() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => window.location.href = 'main.html')
+    .catch(e => alert(e.message));
 }
 
 function logIn() {
-  // Redirect to log-in page if needed
-  alert("Redirect to log-in page (coming soon)");
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => window.location.href = 'main.html')
+    .catch(e => alert(e.message));
 }
 
 function googleSignIn() {
   const provider = new firebase.auth.GoogleAuthProvider();
   firebase.auth().signInWithPopup(provider)
     .then(() => window.location.href = 'main.html')
-    .catch(console.error);
+    .catch(e => alert(e.message));
 }
 
 function logout() {
-  firebase.auth().signOut().then(() => {
-    window.location.href = 'index.html';
-  });
+  firebase.auth().signOut()
+    .then(() => window.location.href = 'index.html');
 }
