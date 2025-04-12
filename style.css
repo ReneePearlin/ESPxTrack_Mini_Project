@@ -1,4 +1,11 @@
-/* MAIN PAGE */
+/* Main Page */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  height: 100vh;
+  overflow: hidden;
+}
 
 #map {
   position: absolute;
@@ -13,58 +20,72 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 200px;
+  width: 220px;
   background: rgba(0, 0, 0, 0.7);
   z-index: 2;
   padding: 20px;
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  font-size: 16px;
+  border-right: 2px solid #ccc;
 }
 
+/* Sidebar Buttons */
 .sidebar button {
-  padding: 10px;
-  background: white;
-  color: #333;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.sidebar button:hover {
-  background-color: #ddd;
-}
-
-.input-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 15px;
-  z-index: 3;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  text-align: center;
-  width: 300px;
-}
-
-.input-card input {
-  margin: 10px 0;
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.input-card button {
-  margin-top: 10px;
-  padding: 10px 20px;
+  padding: 12px;
   background: #5a3dfd;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.sidebar button:hover {
+  background-color: #4a2ae6;
+}
+
+/* Input Card */
+.input-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 15px;
+  z-index: 3;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 350px;
+  font-size: 18px;
+}
+
+/* Input Fields */
+.input-card input {
+  margin: 10px 0;
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* Track Button */
+.input-card button {
+  margin-top: 10px;
+  padding: 12px 20px;
+  background: #5a3dfd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.input-card button:hover {
+  background: #4a2ae6;
 }
