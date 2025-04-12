@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fleet Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EXP_Bus_Tracker</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="home">
-  <div class="container">
-    <h1>Welcome to Fleet Bus Tracker</h1>
-    <button onclick="signIn()">Sign In</button>
-    <button onclick="logIn()">Log In</button>
-    <button onclick="googleSignIn()">Sign In with Google</button>
+<body class="home-body">
+  <div class="blob-bg"></div>
+  <div class="home-container">
+    <h1>Track Your Fleet, Effortlessly</h1>
+    <div class="buttons">
+      <a href="signup.html"><button>Sign Up</button></a>
+      <a href="login.html"><button>Log In</button></a>
+      <button onclick="googleSignIn()">Sign In with Google</button>
+    </div>
   </div>
-
   <script src="firebase.js"></script>
   <script src="app.js"></script>
 </body>
