@@ -1,12 +1,12 @@
 // Replace with your Firebase project config
 const firebaseConfig = {
-  apiKey: "AIzaSyATTUPboq4w0nwxubk5e5tL9ujOiSx03aU",
-  authDomain: "trackmyride-5524a.firebaseapp.com",
-  projectId: "trackmyride-5524a",
-  storageBucket: "trackmyride-5524a.firebasestorage.app",
-  messagingSenderId: "275723082314",
-  appId: "1:275723082314:web:54b9c80fecba4e414b24b3",
-  measurementId: "G-9P4N8QVMTE"
+  apiKey: "AIzaSyDY8v3sFgo8y4yXM2eV-SocRGHXq1OHjwU",
+  authDomain: "busgit-7f19d.firebaseapp.com",
+  projectId: "busgit-7f19d",
+  storageBucket: "busgit-7f19d.firebasestorage.app",
+  messagingSenderId: "471387662803",
+  appId: "1:471387662803:web:25114ebd4392a5d1a4a726",
+  measurementId: "G-LB2BYHRVEQ"
 };
 
 firebase.initializeApp(firebaseConfig);
