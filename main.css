@@ -1,100 +1,150 @@
+/* Reset and base styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Arial', sans-serif;
+  height: 100%;
+  background: #f3f4f6;
 }
 
+/* Container holds sidebar + map */
 .container {
-    display: flex;
-    height: 100%;
-    position: relative;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
+/* Sidebar Style */
 .sidebar {
-    width: 240px;
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
+  width: 250px;
+  background: linear-gradient(to bottom, #6a11cb, #2575fc);
+  color: white;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
 .sidebar h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .sidebar button {
-    margin: 0.5rem 0;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    background: #42a5f5;
-    color: white;
-    transition: background 0.3s;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  margin: 0.5rem 0;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .sidebar button:hover {
-    background: #1e88e5;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 .logout-btn {
-    margin-top: auto;
-    background: #ef5350;
+  margin-top: auto;
+  background-color: #f87171;
+  color: white;
 }
 
 .logout-btn:hover {
-    background: #e53935;
+  background-color: #ef4444;
 }
 
+/* Map container takes up full remaining space */
 .map-container {
-    flex: 1;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0; /* Keeps map in the background */
+  flex: 1;
+  position: relative;
 }
 
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* Overlay for bus number/route inputs */
 .search-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.9);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    z-index: 2; /* Ensure the search overlay appears above the map */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  z-index: 3;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .search-overlay input {
-    width: 140px;
-    padding: 0.6rem 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 1rem;
+  min-width: 180px;
+  background-color: #f9fafb;
+  transition: 0.2s border-color;
+}
+
+.search-overlay input:focus {
+  outline: none;
+  border-color: #3b82f6;
 }
 
 .search-overlay button {
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 8px;
-    background: #ffca28;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
+  padding: 0.75rem 1.5rem;
+  background: #3b82f6;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .search-overlay button:hover {
-    background: #ffc107;
+  background: #2563eb;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 1rem;
+  }
+
+  .sidebar h2 {
+    font-size: 1.3rem;
+  }
+
+  .search-overlay {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .search-overlay input {
+    min-width: 100%;
+  }
+
+  .search-overlay button {
+    width: 100%;
+  }
 }
