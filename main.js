@@ -1,6 +1,13 @@
 let map;
 let markers = [];
-let allBuses = [];
+
+// Predefined bus data (Static Data)
+const buses = [
+  { number: "101", route: "Route A", lat: 13.0827, lng: 80.2707 },
+  { number: "102", route: "Route B", lat: 13.0956, lng: 80.2467 },
+  { number: "103", route: "Route C", lat: 13.0838, lng: 80.2787 },
+  { number: "104", route: "Route D", lat: 13.0912, lng: 80.2369 }
+];
 
 // Initialize Google Map (Default location: Chennai)
 function initMap() {
@@ -17,64 +24,52 @@ function initMap() {
     ]
   });
 
-  // Call fetchBusData on page load
-  fetchBusData();
-}
-
-// Fetch bus data from your backend API
-async function fetchBusData() {
-  try {
-    const res = await fetch('/api/buses'); // Replace with your actual API endpoint
-    allBuses = await res.json();           // [{ number, route, lat, lng }, ...]
-    updateMarkers(allBuses);
-  } catch (e) {
-    console.error('Failed to fetch buses', e);
-  }
-}
-
-// Update markers on map with the current bus data
-function updateMarkers(busList) {
-  // Clear any old markers
-  markers.forEach(m => m.setMap(null));
-  markers = [];
-
-  busList.forEach(bus => {
+  // Create markers for each bus
+  buses.forEach(bus => {
     const marker = new google.maps.Marker({
       position: { lat: bus.lat, lng: bus.lng },
       map,
       title: `Bus #${bus.number} – ${bus.route}`,
       icon: {
-        url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', // Use bus icon here
-        scaledSize: new google.maps.Size(32, 32), // Resize the icon
+        url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', // Placeholder bus icon
+        scaledSize: new google.maps.Size(32, 32) // Resize the icon
       }
     });
     markers.push(marker);
   });
 }
 
-// Filter buses based on input search
+// Search functionality (optional)
 function filterBuses() {
   const numQ = document.getElementById('busNumberInput').value.trim().toLowerCase();
   const routeQ = document.getElementById('busRouteInput').value.trim().toLowerCase();
 
-  const filtered = allBuses.filter(bus => {
+  // Hide all markers first
+  markers.forEach(marker => marker.setMap(null));
+
+  const filtered = buses.filter(bus => {
     const matchNum = !numQ || bus.number.toLowerCase().includes(numQ);
     const matchRoute = !routeQ || bus.route.toLowerCase().includes(routeQ);
     return matchNum && matchRoute;
   });
 
-  updateMarkers(filtered);
+  // Display filtered buses
+  filtered.forEach(bus => {
+    const marker = new google.maps.Marker({
+      position: { lat: bus.lat, lng: bus.lng },
+      map,
+      title: `Bus #${bus.number} – ${bus.route}`,
+      icon: {
+        url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', // Placeholder bus icon
+        scaledSize: new google.maps.Size(32, 32)
+      }
+    });
+    markers.push(marker);
+  });
 }
 
-// Sidebar Button Functions
-document.getElementById('liveRoutesBtn').onclick = () => alert('Showing Live Routes…');
-document.getElementById('pastRoutesBtn').onclick = () => alert('Showing Past Routes…');
-document.getElementById('notificationsBtn').onclick = () => alert('Showing Notifications…');
-
-// Search Button Event Listener
+// Event listener for search button
 document.getElementById('searchBtn').addEventListener('click', filterBuses);
-document.getElementById('busNumberInput').addEventListener('input', filterBuses);
-document.getElementById('busRouteInput').addEventListener('input', filterBuses);
 
-// Initialize map and fetch bus data
+// Initialize map
 window.initMap = initMap;
