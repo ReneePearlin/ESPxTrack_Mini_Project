@@ -1,61 +1,52 @@
 // app.js
+import { auth } from './firebase.js';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
-function signUp() {
-  const email = document.getElementById('email')?.value;
-  const password = document.getElementById('password')?.value;
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const googleBtn = document.getElementById("googleSignInBtn");
+const status = document.getElementById("status");
 
-  console.log("🚀 Signing up with", email);
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
 
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      console.log("✅ Sign up success:", userCredential);
-      window.location.href = 'main.html';
-    })
-    .catch(error => {
-      console.error("❌ Sign up error:", error);
-      alert(error.message);
-    });
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => window.location.href = "main.html")
+      .catch(err => status.innerText = err.message);
+  });
 }
 
-function logIn() {
-  const email = document.getElementById('email')?.value;
-  const password = document.getElementById('password')?.value;
+if (signupBtn) {
+  signupBtn.addEventListener("click", () => {
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
 
-  console.log("🚀 Logging in with", email);
-
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      console.log("✅ Login success:", userCredential);
-      window.location.href = 'main.html';
-    })
-    .catch(error => {
-      console.error("❌ Login error:", error);
-      alert(error.message);
-    });
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => window.location.href = "main.html")
+      .catch(err => status.innerText = err.message);
+  });
 }
 
-function googleSignIn() {
-  console.log("🔘 Google Sign-In clicked");
-  const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider)
-    .then(result => {
-      console.log("✅ Google Sign-In success:", result);
-      window.location.href = 'main.html';
-    })
-    .catch(error => {
-      console.error("❌ Google Sign-In error:", error);
-      alert(error.message);
-    });
+if (googleBtn) {
+  googleBtn.addEventListener("click", () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(() => window.location.href = "main.html")
+      .catch(err => status.innerText = err.message);
+  });
 }
 
-function logout() {
-  firebase.auth().signOut()
-    .then(() => {
-      console.log("👋 Logged out");
-      window.location.href = 'index.html';
-    })
-    .catch(error => {
-      console.error("❌ Logout error:", error);
-      alert(error.message);
-    });
-}
+onAuthStateChanged(auth, user => {
+  // Already logged in? Send to dashboard
+  if (user && location.pathname.includes("index")) {
+    window.location.href = "main.html";
+  }
+});
