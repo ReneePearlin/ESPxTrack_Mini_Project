@@ -4,28 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker | Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="main.css" />
+  <!-- Firebase auth check & logout -->
   <script type="module">
     import { auth } from './firebase.js';
-    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+    import {
+      onAuthStateChanged,
+      signOut
+    } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
     onAuthStateChanged(auth, user => {
       if (!user) window.location.href = 'index.html';
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        signOut(auth).then(() => {
-          window.location.href = "index.html";
-        });
-      });
-    });
+    window.logout = () => {
+      signOut(auth).then(() => location.href = 'index.html');
+    };
   </script>
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY" defer></script>
+  <!-- Your map & sidebar logic -->
+  <script type="module" src="main.js" defer></script>
 </head>
-<body class="main-page">
-  <div class="main-container">
-    <h1>Welcome to the Fleet Dashboard</h1>
-    <button id="logoutBtn" class="primary-btn">Logout</button>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Menu</h2>
+      <button id="liveRoutesBtn">Live Routes</button>
+      <button id="pastRoutesBtn">Past Routes</button>
+      <button id="notificationsBtn">Notifications</button>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </aside>
+
+    <div id="map" class="map-container"></div>
+
+    <div class="search-overlay">
+      <input type="text" id="busNumberInput" placeholder="Bus Number" />
+      <input type="text" id="busRouteInput" placeholder="Bus Route" />
+      <button id="searchBtn">Search</button>
+    </div>
   </div>
 </body>
 </html>
