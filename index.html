@@ -3,37 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Dashboard - Login</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Fleet Tracker | Welcome</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <!-- Background animation -->
-  <div class="background">
-    <div class="gradient"></div>
-  </div>
-
-  <!-- Login Form -->
-  <div class="login-form">
-    <h1>Welcome Back</h1>
-    <p>Sign in to track your fleet of buses</p>
-
-    <div class="input-group">
-      <input type="email" id="email" placeholder="Email" />
+<body class="login-container">
+  <div class="login-box">
+    <h1>Welcome to Fleet Tracker</h1>
+    <p>Please choose an option to proceed</p>
+    <div class="auth-buttons">
+      <a href="login.html" class="google-btn">Login</a>
+      <a href="signup.html" class="google-btn">Sign Up</a>
     </div>
-    <div class="input-group">
-      <input type="password" id="password" placeholder="Password" />
-    </div>
-
-    <button onclick="logIn()">Log In</button>
-    <button class="google-btn" onclick="googleSignIn()">Sign In with Google</button>
-
-    <p class="footer-text">
-      New here? <a href="signup.html">Create an account</a>
-    </p>
   </div>
-
-  <script src="firebase.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>
