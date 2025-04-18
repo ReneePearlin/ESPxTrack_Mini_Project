@@ -5,13 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker | Dashboard</title>
   <link rel="stylesheet" href="main.css" />
-  <!-- Firebase auth check & logout -->
   <script type="module">
     import { auth } from './firebase.js';
-    import {
-      onAuthStateChanged,
-      signOut
-    } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
     onAuthStateChanged(auth, user => {
       if (!user) window.location.href = 'index.html';
@@ -21,9 +17,7 @@
       signOut(auth).then(() => location.href = 'index.html');
     };
   </script>
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnb9bJMuLYQowSIU3GGewSMiwDyGTdjxw" defer></script>
-  <!-- Your map & sidebar logic -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&callback=initMap" async defer></script>
   <script type="module" src="main.js" defer></script>
 </head>
 <body>
