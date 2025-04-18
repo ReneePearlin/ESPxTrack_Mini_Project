@@ -1,102 +1,100 @@
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
-  display: flex;
-  height: 100%;
-  position: relative;
+    display: flex;
+    height: 100%;
+    position: relative;
 }
 
 .sidebar {
-  width: 240px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
+    width: 240px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
 }
 
 .sidebar h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
 }
 
 .sidebar button {
-  margin: 0.5rem 0;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  background: #42a5f5;
-  color: white;
-  transition: background 0.3s;
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #42a5f5;
+    color: white;
+    transition: background 0.3s;
 }
 
 .sidebar button:hover {
-  background: #1e88e5;
+    background: #1e88e5;
 }
 
 .logout-btn {
-  margin-top: auto;
-  background: #ef5350;
+    margin-top: auto;
+    background: #ef5350;
 }
 
 .logout-btn:hover {
-  background: #e53935;
+    background: #e53935;
 }
 
-/* Full-Screen Map */
 .map-container {
-  flex: 1;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0; /* Keeps map in the background */
+    flex: 1;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Keeps map in the background */
 }
 
-/* Search overlay */
 .search-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  z-index: 2; /* Ensure the search overlay appears above the map */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    z-index: 2; /* Ensure the search overlay appears above the map */
 }
 
 .search-overlay input {
-  width: 140px;
-  padding: 0.6rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
+    width: 140px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
 .search-overlay button {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  background: #ffca28;
-  color: #333;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffca28;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 .search-overlay button:hover {
-  background: #ffc107;
+    background: #ffc107;
 }
