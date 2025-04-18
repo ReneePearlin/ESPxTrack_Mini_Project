@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Log In</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Fleet Tracker | Login</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="login.js" defer></script>
 </head>
-<body class="home-body">
-  <div class="blob-bg"></div>
-  <div class="home-container">
-    <h2>Welcome Back</h2>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="logIn()">Log In</button>
+<body class="login-container">
+  <div class="login-box">
+    <h1>Login</h1>
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button id="loginBtn" class="google-btn">Login</button>
+    <div class="divider">or</div>
+    <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
+    <p id="status" class="status-msg"></p>
+    <p><a href="signup.html">Don't have an account? Sign up</a></p>
   </div>
-  <script src="firebase.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>
