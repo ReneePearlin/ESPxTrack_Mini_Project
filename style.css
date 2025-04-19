@@ -1,4 +1,9 @@
-/* General styles for the page */
+Below are the two separate files for your Dashboard:
+
+---
+
+## style.css
+```css
 html, body {
   margin: 0;
   padding: 0;
@@ -18,7 +23,7 @@ html, body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 0; /* Ensures the map is in the background */
+  z-index: 0;
 }
 
 /* Sidebar styles */
