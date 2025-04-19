@@ -1,12 +1,11 @@
+main.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker | Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
-  
-  <!-- Firebase Authentication -->
+  <link rel="stylesheet" href="main.css" />
   <script type="module">
     import { auth } from './firebase.js';
     import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
@@ -19,30 +18,21 @@
       signOut(auth).then(() => location.href = 'index.html');
     };
   </script>
-
-  <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnb9bJMuLYQowSIU3GGewSMiwDyGTdjxw&callback=initMap" async defer></script>
-
-  <!-- Main JavaScript -->
-  <script src="main.js" defer></script>
+  <script type="module" src="main.js" defer></script>
 </head>
 <body>
   <div class="container">
-    <!-- Sidebar -->
     <aside class="sidebar">
-      <h2>Fleet Tracker</h2>
-      <button onclick="activateGeofence()">Geofencing</button>
-      <button onclick="clearGeofence()">Clear Geofence</button>
+      <h2>Menu</h2>
       <button id="liveRoutesBtn">Live Routes</button>
       <button id="pastRoutesBtn">Past Routes</button>
       <button id="notificationsBtn">Notifications</button>
       <button onclick="logout()" class="logout-btn">Logout</button>
     </aside>
 
-    <!-- Map Container in Background -->
     <div id="map" class="map-container"></div>
 
-    <!-- Search Overlay -->
     <div class="search-overlay">
       <input type="text" id="busNumberInput" placeholder="Bus Number" />
       <input type="text" id="busRouteInput" placeholder="Bus Route" />
