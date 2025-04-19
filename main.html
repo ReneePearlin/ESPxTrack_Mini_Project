@@ -3,24 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker | Main</title>
+  <title>Fleet Tracker | Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="main.js" defer></script>
+  
+  <!-- Firebase Authentication -->
+  <script type="module">
+    import { auth } from './firebase.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+
+    onAuthStateChanged(auth, user => {
+      if (!user) window.location.href = 'index.html';
+    });
+
+    window.logout = () => {
+      signOut(auth).then(() => location.href = 'index.html');
+    };
+  </script>
+
+  <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnb9bJMuLYQowSIU3GGewSMiwDyGTdjxw&callback=initMap" async defer></script>
+
+  <!-- Main JavaScript -->
+  <script src="main.js" defer></script>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>Fleet Tracker</h2>
-    <button onclick="activateGeofence()">Geofencing</button>
-    <button onclick="clearGeofence()">Clear Geofence</button>
-    <button onclick="liveTracking()">Live Tracking</button>
-    <button onclick="showPastRoutes()">Past Routes</button>
-    <button onclick="showNotifications()">Notifications</button>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Fleet Tracker</h2>
+      <button onclick="activateGeofence()">Geofencing</button>
+      <button onclick="clearGeofence()">Clear Geofence</button>
+      <button id="liveRoutesBtn">Live Routes</button>
+      <button id="pastRoutesBtn">Past Routes</button>
+      <button id="notificationsBtn">Notifications</button>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </aside>
 
-  <!-- Map in background -->
-  <div id="map"></div>
+    <!-- Map Container in Background -->
+    <div id="map" class="map-container"></div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay">
+      <input type="text" id="busNumberInput" placeholder="Bus Number" />
+      <input type="text" id="busRouteInput" placeholder="Bus Route" />
+      <button id="searchBtn">Search</button>
+    </div>
+  </div>
 </body>
 </html>
