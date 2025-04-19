@@ -17,17 +17,17 @@ window.activateGeofence = function () {
     const center = event.latLng;
 
     geofenceCircle = new google.maps.Circle({
-      strokeColor: \"#FF0000\",
+      strokeColor: "#FF0000",
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: \"#FF9999\",
+      fillColor: "#FF9999",
       fillOpacity: 0.35,
       map,
       center,
       radius: 1000,
     });
 
-    console.log(\"Geofence placed at:\", center.lat(), center.lng());
+    console.log("Geofence placed at:", center.lat(), center.lng());
 
     google.maps.event.removeListener(mapClickListener);
   });
@@ -46,17 +46,17 @@ window.clearGeofence = function () {
 
 // Placeholder functions
 window.liveTracking = function () {
-  alert(\"Live tracking feature is under development.\");
+  alert("Live tracking feature is under development.");
 };
 
 window.showPastRoutes = function () {
-  alert(\"Past routes feature is under development.\");
+  alert("Past routes feature is under development.");
 };
 
 window.showNotifications = function () {
-  alert(\"Notifications feature is under development.\");
+  alert("Notifications feature is under development.");
 };
 
 window.logout = function () {
-  window.location.href = \"index.html\";
+  window.location.href = "index.html";
 };
