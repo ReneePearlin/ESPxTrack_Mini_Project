@@ -44,7 +44,6 @@ window.clearGeofence = function () {
   }
 };
 
-// Placeholder functions
 window.liveTracking = function () {
   alert("Live tracking feature is under development.");
 };
