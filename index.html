@@ -1,3 +1,4 @@
+index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,13 +37,6 @@
     <p id="status" class="status-msg"></p>
   </div>
 
-  <!-- Geofencing Map Section -->
-  <div id="map-section">
-    <button onclick="activateGeofence()">Enable Geofencing</button>
-    <div id="map"></div>
-  </div>
-
-  <!-- Inline Script -->
   <script>
     function toggleTab(tab) {
       document.getElementById('login').classList.toggle('hidden', tab !== 'login');
@@ -50,43 +44,6 @@
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelector(`[onclick="toggleTab('${tab}')"]`).classList.add('active');
     }
-
-    let map, geofenceCircle, geofenceListener;
-
-    function initMap() {
-      map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 13.0827, lng: 80.2707 },
-        zoom: 13,
-      });
-    }
-
-    function activateGeofence() {
-      alert("Click on the map to create a 1 km geofence.");
-
-      if (geofenceCircle) geofenceCircle.setMap(null);
-      if (geofenceListener) google.maps.event.removeListener(geofenceListener);
-
-      geofenceListener = map.addListener("click", (event) => {
-        const center = event.latLng;
-
-        geofenceCircle = new google.maps.Circle({
-          strokeColor: "#FF0000",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#FF0000",
-          fillOpacity: 0.35,
-          map,
-          center,
-          radius: 1000
-        });
-
-        console.log("Geofence center:", center.lat(), center.lng());
-        google.maps.event.removeListener(geofenceListener);
-      });
-    }
   </script>
-
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnb9bJMuLYQowSIU3GGewSMiwDyGTdjxw&callback=initMap" async defer></script>
 </body>
 </html>
