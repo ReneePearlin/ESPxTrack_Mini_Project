@@ -1,75 +1,62 @@
-let map;
-let markers = [];
+let map, geofenceCircle, mapClickListener;
 
-// Predefined bus data (Static Data)
-const buses = [
-  { number: "101", route: "Route A", lat: 13.0827, lng: 80.2707 },
-  { number: "102", route: "Route B", lat: 13.0956, lng: 80.2467 },
-  { number: "103", route: "Route C", lat: 13.0838, lng: 80.2787 },
-  { number: "104", route: "Route D", lat: 13.0912, lng: 80.2369 }
-];
-
-// Initialize Google Map (Default location: Chennai)
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 13.0827, lng: 80.2707 }, // Chennai coordinates
-    zoom: 12,
-    mapTypeId: 'roadmap',
-    disableDefaultUI: true,  // Disable UI elements like zoom
-    styles: [
-      { "elementType": "geometry", "stylers": [{ "color": "#212121" }] },
-      { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] },
-      { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#9e9e9e" }] },
-      { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#000000" }] }
-    ]
+window.initMap = function () {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 13.0827, lng: 80.2707 }, // Chennai
+    zoom: 13,
   });
+};
 
-  // Create markers for each bus
-  buses.forEach(bus => {
-    const marker = new google.maps.Marker({
-      position: { lat: bus.lat, lng: bus.lng },
+window.activateGeofence = function () {
+  alert("Click on the map to create a geofence (1 km radius).");
+
+  if (geofenceCircle) geofenceCircle.setMap(null);
+  if (mapClickListener) google.maps.event.removeListener(mapClickListener);
+
+  mapClickListener = map.addListener("click", (event) => {
+    const center = event.latLng;
+
+    geofenceCircle = new google.maps.Circle({
+      strokeColor: \"#FF0000\",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: \"#FF9999\",
+      fillOpacity: 0.35,
       map,
-      title: `Bus #${bus.number} – ${bus.route}`,
-      icon: {
-        url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', // Placeholder bus icon
-        scaledSize: new google.maps.Size(32, 32) // Resize the icon
-      }
+      center,
+      radius: 1000,
     });
-    markers.push(marker);
+
+    console.log(\"Geofence placed at:\", center.lat(), center.lng());
+
+    google.maps.event.removeListener(mapClickListener);
   });
-}
+};
 
-// Search functionality (optional)
-function filterBuses() {
-  const numQ = document.getElementById('busNumberInput').value.trim().toLowerCase();
-  const routeQ = document.getElementById('busRouteInput').value.trim().toLowerCase();
+window.clearGeofence = function () {
+  if (geofenceCircle) {
+    geofenceCircle.setMap(null);
+    geofenceCircle = null;
+  }
+  if (mapClickListener) {
+    google.maps.event.removeListener(mapClickListener);
+    mapClickListener = null;
+  }
+};
 
-  // Hide all markers first
-  markers.forEach(marker => marker.setMap(null));
+// Placeholder functions
+window.liveTracking = function () {
+  alert(\"Live tracking feature is under development.\");
+};
 
-  const filtered = buses.filter(bus => {
-    const matchNum = !numQ || bus.number.toLowerCase().includes(numQ);
-    const matchRoute = !routeQ || bus.route.toLowerCase().includes(routeQ);
-    return matchNum && matchRoute;
-  });
+window.showPastRoutes = function () {
+  alert(\"Past routes feature is under development.\");
+};
 
-  // Display filtered buses
-  filtered.forEach(bus => {
-    const marker = new google.maps.Marker({
-      position: { lat: bus.lat, lng: bus.lng },
-      map,
-      title: `Bus #${bus.number} – ${bus.route}`,
-      icon: {
-        url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', // Placeholder bus icon
-        scaledSize: new google.maps.Size(32, 32)
-      }
-    });
-    markers.push(marker);
-  });
-}
+window.showNotifications = function () {
+  alert(\"Notifications feature is under development.\");
+};
 
-// Event listener for search button
-document.getElementById('searchBtn').addEventListener('click', filterBuses);
-
-// Initialize map
-window.initMap = initMap;
+window.logout = function () {
+  window.location.href = \"index.html\";
+};
