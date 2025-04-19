@@ -1,69 +1,58 @@
-let map;
-let busMarkers = []; // Store markers for buses
+let map, geofenceCircle, mapClickListener;
 
-// Example of mock data (you can replace this with real data later)
-const busData = [
-  { id: 1, route: "Route 101", lat: 12.9716, lng: 77.5946 }, // Example: Bangalore
-  { id: 2, route: "Route 202", lat: 12.9556, lng: 77.6086 },
-  { id: 3, route: "Route 303", lat: 12.9396, lng: 77.6226 },
-];
-
-function initMap() {
+window.initMap = function () {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 12.9716, lng: 77.5946 },
-    zoom: 12,
+    center: { lat: 13.0827, lng: 80.2707 }, // Chennai
+    zoom: 13,
   });
+};
 
-  console.log("✅ Google Map initialized");
+window.activateGeofence = function () {
+  alert("Click on the map to create a geofence (1 km radius).");
 
-  // Add bus markers for each bus in the mock data
-  busData.forEach(bus => {
-    const marker = new google.maps.Marker({
-      position: { lat: bus.lat, lng: bus.lng },
-      map: map,
-      title: `Bus ${bus.id} - ${bus.route}`,
-      icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  if (geofenceCircle) geofenceCircle.setMap(null);
+  if (mapClickListener) google.maps.event.removeListener(mapClickListener);
+
+  mapClickListener = map.addListener("click", (event) => {
+    const center = event.latLng;
+
+    geofenceCircle = new google.maps.Circle({
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF9999",
+      fillOpacity: 0.35,
+      map,
+      center,
+      radius: 1000,
     });
 
-    busMarkers.push(marker); // Store each marker for later use
+    console.log("Geofence placed at:", center.lat(), center.lng());
+
+    google.maps.event.removeListener(mapClickListener);
   });
-}
+};
 
-function trackBus() {
-  const number = document.getElementById("busNumber").value;
-  const route = document.getElementById("busRoute").value;
-  
-  if (!number || !route) {
-    alert("Please enter both Bus Number and Route.");
-    return;
+window.clearGeofence = function () {
+  if (geofenceCircle) {
+    geofenceCircle.setMap(null);
+    geofenceCircle = null;
   }
-
-  const bus = busData.find(b => b.id == number && b.route === route);
-  if (bus) {
-    alert(`Tracking Bus No: ${number} on Route: ${route}`);
-    map.setCenter(new google.maps.LatLng(bus.lat, bus.lng));
-    map.setZoom(14);
-  } else {
-    alert("Bus not found. Check the number and route.");
+  if (mapClickListener) {
+    google.maps.event.removeListener(mapClickListener);
+    mapClickListener = null;
   }
-}
+};
 
-function showLiveRoutes() {
-  alert("Displaying live routes on the map.");
-  // You can expand this to dynamically load live data from your server.
-}
+// Placeholder functions
+window.liveTracking = function () {
+  alert("Live tracking feature is under development.");
+};
 
-function showPastRoutes() {
-  alert("Displaying past routes.");
-  // Here you can later add logic to show past bus routes.
-}
+window.showPastRoutes = function () {
+  alert("Past routes feature is under development.");
+};
 
-function showGeofencing() {
-  alert("Displaying geofencing zones.");
-  // You can add geofencing logic to highlight certain areas on the map.
-}
-
-function showNotifications() {
-  alert("Showing notifications.");
-  // You can display real-time notifications here.
-}
+window.showNotifications = function () {
+  alert("Notifications feature is under development.");
+};
