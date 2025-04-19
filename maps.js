@@ -56,3 +56,7 @@ window.showPastRoutes = function () {
 window.showNotifications = function () {
   alert("Notifications feature is under development.");
 };
+
+window.logout = function () {
+  window.location.href = "index.html";
+};
