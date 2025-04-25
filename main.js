@@ -1,45 +1,45 @@
 let map, geofenceCircle, mapClickListener;
 
-window.initMap = function () {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 13.0827, lng: 80.2707 }, // Chennai
-    zoom: 13,
-  });
-};
+document.addEventListener("DOMContentLoaded", function () {
+  map = L.map("map").setView([13.0827, 80.2707], 13); // Chennai
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors',
+  }).addTo(map);
+});
 
 window.activateGeofence = function () {
   alert("Click on the map to create a geofence (1 km radius).");
 
-  if (geofenceCircle) geofenceCircle.setMap(null);
-  if (mapClickListener) google.maps.event.removeListener(mapClickListener);
+  if (geofenceCircle) map.removeLayer(geofenceCircle);
+  if (mapClickListener) map.off("click", mapClickListener);
 
-  mapClickListener = map.addListener("click", (event) => {
-    const center = event.latLng;
+  mapClickListener = function (event) {
+    const center = event.latlng;
 
-    geofenceCircle = new google.maps.Circle({
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
+    geofenceCircle = L.circle(center, {
+      color: "#FF0000",
       fillColor: "#FF9999",
       fillOpacity: 0.35,
-      map,
-      center,
       radius: 1000,
-    });
+    }).addTo(map);
 
-    console.log("Geofence placed at:", center.lat(), center.lng());
+    console.log("Geofence placed at:", center.lat, center.lng);
 
-    google.maps.event.removeListener(mapClickListener);
-  });
+    map.off("click", mapClickListener); // Remove listener after one use
+  };
+
+  map.on("click", mapClickListener);
 };
 
 window.clearGeofence = function () {
   if (geofenceCircle) {
-    geofenceCircle.setMap(null);
+    map.removeLayer(geofenceCircle);
     geofenceCircle = null;
   }
   if (mapClickListener) {
-    google.maps.event.removeListener(mapClickListener);
+    map.off("click", mapClickListener);
     mapClickListener = null;
   }
 };
