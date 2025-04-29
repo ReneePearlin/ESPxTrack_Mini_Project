@@ -148,8 +148,6 @@ html, body, #app {
   z-index: 0;
 }
 
-/* Panels (e.g., Past Routes) */
-/* Enhanced Panel (Feature Panel) Styling */
 /* Feature Panel Styling */
 .panel {
   position: absolute;
@@ -232,12 +230,18 @@ html, body, #app {
   to { opacity: 1; transform: translateY(0); }
 }
 
-
-/* Leaflet Custom Bus Markers (Optional enhancement) */
+/* Leaflet Custom Bus Markers */
 .leaflet-marker-icon.bus-marker {
   border-radius: 4px;
   width: 30px;
   height: 30px;
   background-size: cover;
   background-position: center;
+}
+
+/* Selected Bus Marker - Highlighted with glow */
+.leaflet-marker-icon.bus-marker.selected-bus {
+  box-shadow: 0 0 10px 4px #f39c12;
+  transform: scale(1.2);
+  z-index: 999;
 }
