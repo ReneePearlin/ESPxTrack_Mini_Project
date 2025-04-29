@@ -1,9 +1,9 @@
-// firebase.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js"></script>
 
-// Your Firebase Config
-const firebaseConfig = {
+<script>
+ const firebaseConfig = {
   apiKey: "AIzaSyDY8v3sFgo8y4yXM2eV-SocRGHXq1OHjwU",
   authDomain: "busgit-7f19d.firebaseapp.com",
   projectId: "busgit-7f19d",
@@ -13,7 +13,5 @@ const firebaseConfig = {
   measurementId: "G-LB2BYHRVEQ"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export { auth };
+  firebase.initializeApp(firebaseConfig);
+</script>
