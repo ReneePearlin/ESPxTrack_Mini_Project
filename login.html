@@ -2,21 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fleet Tracker | Login</title>
+  <title>Login</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="login.js" defer></script>
+  <script src="firebase.js"></script>
 </head>
-<body class="login-container">
-  <div class="login-box">
-    <h1>Login</h1>
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button class="primary-btn" id="loginBtn">Login</button>
-    <div class="divider">or</div>
-    <button class="google-btn" id="googleSignInBtn">Sign in with Google</button>
-    <p id="status" class="status-msg"></p>
-    <p><a href="signup.html">Don't have an account? Sign up</a></p>
+<body>
+  <div class="auth-container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
   </div>
+  <script>
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => location.href = 'main.html')
+        .catch(err => alert(err.message));
+    }
+  </script>
 </body>
 </html>
