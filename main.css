@@ -1,150 +1,31 @@
-/* Reset and base styling */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+body, html { margin: 0; padding: 0; height: 100%; }
+#map { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 0; }
+#app { position: relative; z-index: 1; }
 
-html, body {
-  height: 100%;
-  background: #f3f4f6;
-}
-
-/* Container holds sidebar + map */
-.container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* Sidebar Style */
-.sidebar {
-  width: 250px;
-  background: linear-gradient(to bottom, #6a11cb, #2575fc);
-  color: white;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-}
-
-.sidebar h2 {
-  font-size: 1.6rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.sidebar button {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  border: none;
-  margin: 0.5rem 0;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.sidebar button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.logout-btn {
-  margin-top: auto;
-  background-color: #f87171;
-  color: white;
-}
-
-.logout-btn:hover {
-  background-color: #ef4444;
-}
-
-/* Map container takes up full remaining space */
-.map-container {
-  flex: 1;
-  position: relative;
-}
-
-#map {
-  height: 100%;
-  width: 100%;
-}
-
-/* Overlay for bus number/route inputs */
-.search-overlay {
+.sidebar-left, .sidebar-right {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1.5rem 2rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  z-index: 3;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.search-overlay input {
-  padding: 0.7rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  font-size: 1rem;
-  min-width: 180px;
-  background-color: #f9fafb;
-  transition: 0.2s border-color;
-}
-
-.search-overlay input:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-
-.search-overlay button {
-  padding: 0.75rem 1.5rem;
-  background: #3b82f6;
+  top: 0; bottom: 0;
+  width: 200px;
+  background: #1E2A38;
   color: white;
-  font-weight: bold;
-  border: none;
+  padding: 20px;
+  overflow-y: auto;
+}
+.sidebar-left { left: 0; }
+.sidebar-right { right: 0; }
+
+.center-search {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 15px;
   border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-.search-overlay button:hover {
-  background: #2563eb;
-}
+button { margin: 5px 0; width: 100%; padding: 10px; border: none; background: #4CAF50; color: white; border-radius: 5px; cursor: pointer; }
 
-/* Responsive for smaller screens */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-    padding: 1rem;
-  }
-
-  .sidebar h2 {
-    font-size: 1.3rem;
-  }
-
-  .search-overlay {
-    flex-direction: column;
-    padding: 1rem;
-  }
-
-  .search-overlay input {
-    min-width: 100%;
-  }
-
-  .search-overlay button {
-    width: 100%;
-  }
-}
+ul { list-style: none; padding: 0; }
+ul li { margin-bottom: 8px; cursor: pointer; }
