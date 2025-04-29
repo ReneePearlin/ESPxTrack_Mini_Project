@@ -1,7 +1,8 @@
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,10 +10,10 @@ body {
 }
 
 .auth-container {
-  background: #ffffff;
+  background: white;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   width: 350px;
 }
@@ -24,7 +25,7 @@ body {
 
 .auth-container input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -39,13 +40,13 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #2575fc;
-  color: #fff;
-  transition: background-color 0.3s ease;
+  background-color: #1f8ef1;
+  color: white;
+  transition: 0.3s ease;
 }
 
 .auth-buttons button:hover {
-  background-color: #1a5ed9;
+  background-color: #0d6efd;
 }
 
 .google-btn {
@@ -56,7 +57,8 @@ body {
   background-color: #c23321;
 }
 
-#message {
-  color: red;
+#status {
   margin-top: 10px;
+  color: red;
 }
+
