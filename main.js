@@ -81,7 +81,7 @@ function drawMarkers() {
     });
     const m = L.marker([bus.latitude, bus.longitude], { icon })
       .addTo(map)
-      .bindPopup(`<strong>Bus ${bus.id}</strong><br>${bus.routeName}`);
+      .bindPopup(`<strong>Bus No-${bus.id}</strong><br>${bus.routeName}`);
     currentMarkers[bus.id] = m;
   });
 }
@@ -119,8 +119,10 @@ function populateBusList() {
   ul.innerHTML = '';
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
-    li.textContent = `Bus ${bus.id}`;
-    li.onclick = () => map.setView([bus.latitude, bus.longitude], 14);
+    // Rename to "Bus No-X"
+    li.textContent = `Bus No-${bus.id}`;
+    // On click: zoom + show details
+    li.addEventListener('click', () => zoomToBus(bus.id));
     ul.appendChild(li);
   });
 }
@@ -131,10 +133,38 @@ function populateBusSelects() {
     Object.values(busData).forEach(bus => {
       const o = document.createElement('option');
       o.value = bus.id;
-      o.text = `Bus ${bus.id}`;
+      // Rename here as well
+      o.text = `Bus No-${bus.id}`;
       sel.appendChild(o);
     });
   });
+}
+
+// Zoom the map to the chosen bus and open its popup
+function zoomToBus(busId) {
+  const marker = currentMarkers[busId];
+  if (!marker) return;
+  map.setView(marker.getLatLng(), 15, { animate: true });
+  marker.openPopup();
+  showBusDetails(busId);
+}
+
+// Populate and show the details panel under the bus list
+function showBusDetails(busId) {
+  const b = busData[busId];
+  const panel = document.getElementById('busDetailsPanel');
+  panel.classList.remove('hidden');
+
+  document.getElementById('detailTitle').textContent = `Bus No-${b.id}`;
+  document.getElementById('detailContent').innerHTML = `
+    <p><strong>Route:</strong> ${b.routeName}</p>
+    <p><strong>From:</strong> ${b.start}</p>
+    <p><strong>To:</strong> ${b.end}</p>
+    <p><strong>Fuel:</strong> ${b.fuel}%</p>
+    <p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>
+    <p><strong>Battery:</strong> ${b.battery}</p>
+    <p><strong>Engine:</strong> ${b.engine}</p>
+  `;
 }
 
 function showFeatureData() {
@@ -161,11 +191,11 @@ function showFeatureData() {
     case 'Performance Metrics':
       html = `
         <p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
-        <strong>Fuel:</strong> ${b.fuel} %</p>`; // Use the 'fuel' field
+        <strong>Fuel:</strong> ${b.fuel} %</p>`;
       break;
     case 'Occupancy Insights':
       html = `
-        <p><strong>Occupancy:</strong> ${b.occupancy} / ${b.capacity}</p>`; // Use 'occupancy' and 'capacity'
+        <p><strong>Occupancy:</strong> ${b.occupancy} / ${b.capacity}</p>`;
       break;
     case 'Diagnostic Panel':
       html = `
