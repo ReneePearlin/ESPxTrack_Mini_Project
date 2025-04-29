@@ -1,94 +1,154 @@
-import { db, auth } from './firebase-config.js';
+import { auth, db } from './firebase.js';
+import {
+  collection,
+  onSnapshot,
+  doc,
+  getDoc
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import {
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
-// Map Initialization (Leaflet)
-let map = L.map('map').setView([12.8435, 80.1534], 13); // Centered on OMR/Chennai
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+let map;
+let currentMarkers = {};
+let busData = {};
+const BUS_COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#e67e22', '#1abc9c', '#34495e'];
 
-// Sidebar Panel Toggle Setup
-const panelPairs = [
-  ['btnRealTime', 'panelRealTime'],
-  ['btnRouteSummary', 'panelRouteSummary'],
-  ['btnPerformanceMetrics', 'panelPerformanceMetrics'],
-  ['btnOccupancyInsights', 'panelOccupancyInsights'],
-  ['btnDiagnosticPanel', 'panelDiagnosticPanel'],
-  ['btnGeofencing', 'panelGeofencing'],
-  ['btnPastRoutes', 'panelPastRoutes']
-];
+let currentFeature = '';
 
-panelPairs.forEach(([btnId, panelId]) => {
-  const button = document.getElementById(btnId);
-  const panel = document.getElementById(panelId);
+document.addEventListener('DOMContentLoaded', () => {
+  initMap();
+  setupAuth();
+  loadBusData();
+  bindUI();
+});
 
-  if (button && panel) {
-    button.addEventListener('click', () => {
-      // Hide all panels first
-      document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
-      // Show the selected panel
+function initMap() {
+  map = L.map('map').setView([13.04, 80.23], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  L.marker([12.873, 80.222])
+    .addTo(map)
+    .bindPopup("St. Joseph’s Group of Colleges, OMR")
+    .openPopup();
+}
+
+function setupAuth() {
+  document.getElementById('btnLogout').addEventListener('click', () =>
+    signOut(auth).then(() => window.location.href = 'index.html')
+  );
+}
+
+function loadBusData() {
+  const col = collection(db, 'live_buses');
+  onSnapshot(col, snap => {
+    busData = {};
+    snap.forEach((doc, i) => {
+      const d = doc.data();
+      if (d.id && d.latitude && d.longitude) {
+        busData[d.id] = {
+          ...d,
+          color: BUS_COLORS[i % BUS_COLORS.length]
+        };
+      }
+    });
+    drawCurrentMarkers();
+    populateBusList();
+    populateFeatureBusSelect();
+  });
+}
+
+function drawCurrentMarkers() {
+  Object.values(currentMarkers).forEach(m => map.removeLayer(m));
+  currentMarkers = {};
+  Object.values(busData).forEach(bus => {
+    const icon = L.icon({
+      iconUrl: 'path/to/bus-icon.png', // replace with your actual icon path
+      iconSize: [30, 50],
+      iconAnchor: [15, 25],
+      popupAnchor: [0, -25]
+    });
+
+    const marker = L.marker([bus.latitude, bus.longitude], { icon }).addTo(map)
+      .bindPopup(`<strong>Bus ${bus.id}</strong><br>${bus.routeName}`);
+    currentMarkers[bus.id] = marker;
+  });
+}
+
+function bindUI() {
+  const panel = document.getElementById('featurePanel');
+  const featureBtnIds = {
+    btnRealTime: 'Real-Time Status',
+    btnRouteSummary: 'Route Summary',
+    btnPerformance: 'Performance Metrics',
+    btnOccupancy: 'Occupancy Insights',
+    btnDiagnostics: 'Diagnostic Panel',
+    btnGeofencing: 'Geofencing'
+  };
+
+  Object.entries(featureBtnIds).forEach(([btnId, label]) => {
+    document.getElementById(btnId).addEventListener('click', () => {
+      currentFeature = label;
+      document.getElementById('featureResult').innerHTML = '';
       panel.classList.remove('hidden');
     });
-  }
-});
-
-// Close buttons inside each panel
-document.querySelectorAll('.panel .closeBtn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.closest('.panel').classList.add('hidden');
   });
-});
 
-// Toggle bus list (Right Sidebar)
-const toggleBusListBtn = document.getElementById('toggleBusList');
-const busList = document.getElementById('busList');
-toggleBusListBtn.addEventListener('click', () => {
-  busList.classList.toggle('hidden');
-});
+  panel.querySelector('.closeBtn').addEventListener('click', () => panel.classList.add('hidden'));
 
-// Search functionality (center panel)
-const searchBtn = document.getElementById('searchBtn');
-const busInput = document.getElementById('busInput');
-const busDetails = document.getElementById('busDetails');
-
-searchBtn.addEventListener('click', () => {
-  const busNumber = busInput.value.trim();
-  if (!busNumber) return;
-
-  // Example Firebase call (Realtime Database or Firestore)
-  // Here you can adjust it to fetch based on your DB structure
-  fetchBusDetails(busNumber);
-});
-
-function fetchBusDetails(busNumber) {
-  const busRef = firebase.database().ref(`buses/${busNumber}`);
-  busRef.once('value').then(snapshot => {
-    const data = snapshot.val();
-    if (data) {
-      busDetails.innerHTML = `
-        <strong>Bus Number:</strong> ${busNumber}<br>
-        <strong>Route:</strong> ${data.route}<br>
-        <strong>Status:</strong> ${data.status}<br>
-        <strong>Last Seen:</strong> ${data.timestamp}
-      `;
-    } else {
-      busDetails.textContent = 'Bus not found.';
+  document.getElementById('loadFeatureData').addEventListener('click', () => {
+    const busId = document.getElementById('featureBusSelect').value;
+    const resultBox = document.getElementById('featureResult');
+    if (!busId || !busData[busId]) {
+      resultBox.innerHTML = `<p style="color:red;">Invalid Bus</p>`;
+      return;
     }
-  }).catch(err => {
-    console.error(err);
-    busDetails.textContent = 'Error fetching data.';
+
+    const bus = busData[busId];
+    switch (currentFeature) {
+      case 'Real-Time Status':
+        resultBox.innerHTML = `<p>Latitude: ${bus.latitude}<br>Longitude: ${bus.longitude}</p>`;
+        break;
+      case 'Route Summary':
+        resultBox.innerHTML = `<p>Route: ${bus.routeName}<br>From: ${bus.start}<br>To: ${bus.end}</p>`;
+        break;
+      case 'Performance Metrics':
+        resultBox.innerHTML = `<p>Speed: ${bus.speed || 'N/A'} km/h<br>Fuel: ${bus.fuel || 'N/A'}%</p>`;
+        break;
+      case 'Occupancy Insights':
+        resultBox.innerHTML = `<p>Occupancy: ${bus.occupancy || 'N/A'} / ${bus.capacity || 'N/A'}</p>`;
+        break;
+      case 'Diagnostic Panel':
+        resultBox.innerHTML = `<p>Battery Health: ${bus.battery || 'Good'}<br>Engine: ${bus.engine || 'OK'}</p>`;
+        break;
+      case 'Geofencing':
+        const inZone = bus.latitude >= 12.85 && bus.latitude <= 13.1 && bus.longitude >= 80.1 && bus.longitude <= 80.3;
+        resultBox.innerHTML = `<p>Status: ${inZone ? 'Inside' : 'Outside'} the designated zone</p>`;
+        break;
+    }
   });
 }
 
-// Placeholder for clearing past route markers
-function clearPastRouteMarkers() {
-  // TODO: implement marker cleanup
+function populateBusList() {
+  const ul = document.getElementById('busList');
+  ul.innerHTML = '';
+  Object.values(busData).forEach(bus => {
+    const li = document.createElement('li');
+    li.textContent = `Bus ${bus.id}`;
+    li.dataset.bus = bus.id;
+    ul.appendChild(li);
+  });
 }
 
-// Logout functionality
-document.getElementById('btnLogout').addEventListener('click', () => {
-  auth.signOut().then(() => {
-    window.location.href = 'index.html';
-  }).catch(error => {
-    console.error('Logout error:', error);
+function populateFeatureBusSelect() {
+  const sel = document.getElementById('featureBusSelect');
+  sel.innerHTML = '<option value="">Select Bus…</option>';
+  Object.values(busData).forEach(bus => {
+    const o = document.createElement('option');
+    o.value = bus.id;
+    o.text = `Bus ${bus.id}`;
+    sel.appendChild(o);
   });
-});
+}
