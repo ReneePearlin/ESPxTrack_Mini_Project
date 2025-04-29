@@ -1,52 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login/Sign Up</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Fleet Tracker - Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="app.js" defer></script>
 </head>
 <body>
-
-  <!-- Container for the whole login/signup section -->
   <div class="auth-container">
+    <h2>Welcome to Fleet Tracker</h2>
 
-    <!-- Header -->
-    <h1>Welcome to Bus Fleet Tracker</h1>
-    
-    <!-- Login / Signup Form -->
-    <div class="auth-form">
-      
-      <!-- Login Section -->
-      <div class="form-section" id="loginSection">
-        <h2>Login</h2>
-        <input id="loginEmail" type="email" placeholder="Enter your email" required>
-        <input id="loginPassword" type="password" placeholder="Enter your password" required>
-        <button id="loginBtn">Login</button>
-        <p id="status"></p>
-      </div>
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
 
-      <!-- Signup Section -->
-      <div class="form-section" id="signupSection">
-        <h2>Sign Up</h2>
-        <input id="signupEmail" type="email" placeholder="Enter your email" required>
-        <input id="signupPassword" type="password" placeholder="Enter your password" required>
-        <button id="signupBtn">Sign Up</button>
-      </div>
-
-      <!-- Google Sign-In Section -->
-      <div class="form-section">
-        <h2>Or Sign In with Google</h2>
-        <button id="googleSignInBtn">Sign in with Google</button>
-      </div>
-      
+    <div class="auth-buttons">
+      <button id="loginBtn">Login</button>
+      <button id="signupBtn">Sign Up</button>
+      <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
     </div>
+
+    <p id="status"></p>
   </div>
-
-  <!-- Link to your CSS file -->
-  <script type="module" src="./app.js" defer></script>
-  <!-- Firebase Config and SDK -->
-  <script type="module" src="./firebase.js" defer></script>
-
 </body>
 </html>
