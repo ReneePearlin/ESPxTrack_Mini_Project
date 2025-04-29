@@ -39,7 +39,7 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  const busesCol = collection(db, 'buses'); // assumes root-level collection
+  const busesCol = collection(db, 'live_buses'); // assumes root-level collection
 
   onSnapshot(busesCol, snapshot => {
     busData = {};
