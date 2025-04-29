@@ -1,8 +1,11 @@
+// firebase.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
-// Replace with your actual Firebase config
- const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDY8v3sFgo8y4yXM2eV-SocRGHXq1OHjwU",
   authDomain: "busgit-7f19d.firebaseapp.com",
+  databaseURL: "https://busgit-7f19d-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "busgit-7f19d",
   storageBucket: "busgit-7f19d.firebasestorage.app",
   messagingSenderId: "471387662803",
@@ -10,6 +13,6 @@
   measurementId: "G-LB2BYHRVEQ"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-firebase.auth();
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
