@@ -1,86 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker Dashboard</title>
-
-  <!-- Leaflet CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Fleet Tracking</title>
+  <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Your custom CSS -->
-  <link rel="stylesheet" href="main.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
-
 <body>
   <div id="app">
-    <!-- Left Sidebar -->
-    <aside class="sidebar-left">
-      <h2>Menu</h2>
-      <button id="btnNotifications">Notifications</button>
-      <button id="btnPastRoutes">Past Routes</button>
-      <button id="btnGeofencing">Geofencing</button>
-      <button id="btnRouteDev">Route Deviation Alerts</button>
-      <button id="btnAnalytics">Reporting & Analytics</button>
-      <button id="btnLogout">Logout</button>
-    </aside>
 
-    <!-- Map -->
+    <!-- Left Sidebar -->
+    <div class="sidebar-left">
+      <h2>Control Panel</h2>
+      <button id="btnRealTime">Real-Time Status</button>
+      <button id="btnRouteSummary">Route Summary</button>
+      <button id="btnPerformance">Performance Metrics</button>
+      <button id="btnOccupancy">Occupancy Insights</button>
+      <button id="btnDiagnostics">Diagnostic Panel</button>
+      <button id="btnGeofencing">Geofencing</button>
+      <button id="btnLogout">Logout</button>
+    </div>
+
+    <!-- Right Sidebar (Bus List) -->
+    <div class="sidebar-right">
+      <button id="toggleBusList">Toggle Bus List</button>
+      <ul id="busList"></ul>
+    </div>
+
+    <!-- Leaflet Map -->
     <div id="map"></div>
 
-    <!-- Center Search Panel -->
-    <div class="center-panel">
-      <input type="text" id="busSearch" placeholder="Search Bus Number" />
-      <button id="searchBtn">Search</button>
-      <div id="busDetails"></div>
+    <!-- Panel: Route Summary -->
+    <div id="panelPastRoutes" class="panel hidden">
+      <button class="closeBtn">&times;</button>
+      <label for="pastRoutesBusSelect">Select Bus</label>
+      <select id="pastRoutesBusSelect"></select>
+      <button id="showPastRouteBtn">Show Past Route</button>
     </div>
 
-    <!-- Right Sidebar -->
-    <aside class="sidebar-right">
-      <button id="toggleBusList">Bus List ▾</button>
-      <ul id="busList" class="hidden"></ul>
-    </aside>
-
-    <!-- Feature Panels -->
-    <div id="panelContainer">
-      <section id="panelNotifications" class="panel hidden">
-        <button class="closeBtn">×</button>
-        <h2>Notifications</h2>
-        <p>Here you’ll see all notifications…</p>
-      </section>
-
-      <section id="panelPastRoutes" class="panel hidden">
-        <button class="closeBtn">×</button>
-        <h2>Past Routes</h2>
-        <select id="pastRoutesBusSelect">
-          <option value="">Select Bus…</option>
-        </select>
-        <button id="showPastRouteBtn">Show Past Route</button>
-      </section>
-
-      <section id="panelGeofencing" class="panel hidden">
-        <button class="closeBtn">×</button>
-        <h2>Geofencing</h2>
-        <p>Configure your geofences here…</p>
-      </section>
-
-      <section id="panelRouteDev" class="panel hidden">
-        <button class="closeBtn">×</button>
-        <h2>Route Deviation Alerts</h2>
-        <p>Set up deviation alerts…</p>
-      </section>
-
-      <section id="panelAnalytics" class="panel hidden">
-        <button class="closeBtn">×</button>
-        <h2>Reporting & Analytics</h2>
-        <p>Analytics dashboard coming soon…</p>
-      </section>
+    <!-- Panels: Placeholders -->
+    <div id="panelPerformance" class="panel hidden">
+      <button class="closeBtn">&times;</button>
+      <p><strong>Performance Metrics:</strong><br>Coming soon.</p>
     </div>
+
+    <div id="panelOccupancy" class="panel hidden">
+      <button class="closeBtn">&times;</button>
+      <p><strong>Occupancy Insights:</strong><br>Coming soon.</p>
+    </div>
+
+    <div id="panelDiagnostics" class="panel hidden">
+      <button class="closeBtn">&times;</button>
+      <p><strong>Diagnostics Panel:</strong><br>Coming soon.</p>
+    </div>
+
+    <div id="panelGeofencing" class="panel hidden">
+      <button class="closeBtn">&times;</button>
+      <p><strong>Geofencing Panel:</strong><br>Coming soon or embed here.</p>
+    </div>
+
   </div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Firebase + App Logic -->
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
