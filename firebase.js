@@ -1,8 +1,5 @@
-script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js"></script>
 
-<script>
+// Replace with your actual Firebase config
  const firebaseConfig = {
   apiKey: "AIzaSyDY8v3sFgo8y4yXM2eV-SocRGHXq1OHjwU",
   authDomain: "busgit-7f19d.firebaseapp.com",
@@ -13,5 +10,6 @@ script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js"></script>
   measurementId: "G-LB2BYHRVEQ"
 };
 
-  firebase.initializeApp(firebaseConfig);
-</script>
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.auth();
