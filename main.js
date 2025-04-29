@@ -1,7 +1,12 @@
 // main.js
-import { database, auth } from './firebase.js';
-import { ref, onValue } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
-import { signOut }     from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { auth, db } from './firebase.js';
+import {
+  collection,
+  onSnapshot
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import {
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
 let map, markers = {}, busData = {};
 
@@ -18,7 +23,7 @@ function initMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // fixed destination marker
+  // Fixed destination
   L.marker([12.873, 80.222])
     .addTo(map)
     .bindPopup("St. Joseph’s Group of Colleges, OMR")
@@ -35,21 +40,31 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  const busesRef = ref(database, 'buses');
-  onValue(busesRef, snapshot => {
-    const data = snapshot.val() || {};
-    busData = data;
+  const busesCol = collection(db, 'buses');
+  onSnapshot(busesCol, snapshot => {
+    // Build a simple map of busNumber→busInfo
+    busData = {};
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      // assume each doc has fields: busNumber, lat, lng, route
+      busData[data.busNumber] = { ...data };
+    });
+
+    console.log('Loaded busData:', busData);
     refreshMarkers();
-    populateBusList();  
+    populateBusList();
+  }, err => {
+    console.error("Firestore listen failed:", err);
   });
 }
 
 function refreshMarkers() {
-  // remove old
+  // Clear old markers
   Object.values(markers).forEach(m => map.removeLayer(m));
   markers = {};
 
-  Object.entries(busData).forEach(([id, bus]) => {
+  // Add new ones
+  Object.values(busData).forEach(bus => {
     const m = L.marker([bus.lat, bus.lng])
       .addTo(map)
       .bindPopup(`Bus ${bus.busNumber}<br>${bus.route}`);
@@ -58,7 +73,7 @@ function refreshMarkers() {
 }
 
 function bindUI() {
-  // sidebar feature buttons (placeholder)
+  // Sidebar‐buttons are still placeholders:
   ['btnNotifications','btnPastRoutes','btnGeofencing','btnRouteDev','btnAnalytics']
     .forEach(id => {
       document.getElementById(id)
@@ -67,7 +82,7 @@ function bindUI() {
         });
     });
 
-  // Bus List toggle
+  // Toggle bus list
   const busListEl = document.getElementById('busList');
   document.getElementById('toggleBusList')
     .addEventListener('click', () => {
@@ -78,10 +93,12 @@ function bindUI() {
   document.getElementById('searchBtn')
     .addEventListener('click', searchBus);
 
-  // Click on a bus in the list
+  // Click list‐item
   busListEl.addEventListener('click', e => {
     if (e.target.tagName === 'LI') {
-      showBusDetails(e.target.dataset.bus);
+      const num = e.target.dataset.bus;
+      focusBus(num);
+      showBusDetails(num);
     }
   });
 }
@@ -99,24 +116,24 @@ function populateBusList() {
 
 function searchBus() {
   const num = document.getElementById('busSearch').value.trim();
-  if (!busData) return;
-  const found = Object.values(busData)
-    .find(b => b.busNumber === num);
-  if (found) {
-    showBusDetails(found.busNumber);
-    // open its popup and pan
-    markers[num].openPopup();
-    map.panTo(markers[num].getLatLng());
-  } else {
-    document.getElementById('busDetails')
-      .textContent = `No bus ${num} found`;
+  if (!busData[num]) {
+    document.getElementById('busDetails').textContent = `No bus ${num} found`;
+    return;
+  }
+  focusBus(num);
+  showBusDetails(num);
+}
+
+function focusBus(num) {
+  const marker = markers[num];
+  if (marker) {
+    marker.openPopup();
+    map.panTo(marker.getLatLng());
   }
 }
 
 function showBusDetails(busNumber) {
-  const bus = Object.values(busData)
-    .find(b => b.busNumber === busNumber);
-  if (!bus) return;
+  const bus = busData[busNumber];
   document.getElementById('busDetails').innerHTML = `
     <strong>Bus ${bus.busNumber}</strong><br>
     Route: ${bus.route}<br>
