@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bus Fleet Tracking</title>
-  <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fleet Tracker</title>
+  <link rel="stylesheet" href="main.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
   <div id="app">
-
-    <!-- Left Sidebar -->
     <div class="sidebar-left">
-      <h2>Control Panel</h2>
+      <h2>Fleet Panel</h2>
       <button id="btnRealTime">Real-Time Status</button>
       <button id="btnRouteSummary">Route Summary</button>
       <button id="btnPerformance">Performance Metrics</button>
@@ -23,46 +20,31 @@
       <button id="btnLogout">Logout</button>
     </div>
 
-    <!-- Right Sidebar (Bus List) -->
     <div class="sidebar-right">
-      <button id="toggleBusList">Toggle Bus List</button>
+      <button id="toggleBusList">Bus List</button>
       <ul id="busList"></ul>
     </div>
 
-    <!-- Leaflet Map -->
+    <div class="center-panel">
+      <input id="searchInput" type="text" placeholder="Enter Bus Number" />
+      <button id="searchBtn">Search</button>
+      <div id="busDetails"></div>
+    </div>
+
     <div id="map"></div>
 
-    <!-- Panel: Route Summary -->
-    <div id="panelPastRoutes" class="panel hidden">
+    <!-- Panels (reusable for all feature buttons) -->
+    <div class="panel hidden" id="featurePanel">
       <button class="closeBtn">&times;</button>
-      <label for="pastRoutesBusSelect">Select Bus</label>
-      <select id="pastRoutesBusSelect"></select>
-      <button id="showPastRouteBtn">Show Past Route</button>
+      <label for="featureBusSelect">Select Bus</label>
+      <select id="featureBusSelect"></select>
+      <button id="loadFeatureData">Show Info</button>
+      <div id="featureResult"></div>
     </div>
-
-    <!-- Panels: Placeholders -->
-    <div id="panelPerformance" class="panel hidden">
-      <button class="closeBtn">&times;</button>
-      <p><strong>Performance Metrics:</strong><br>Coming soon.</p>
-    </div>
-
-    <div id="panelOccupancy" class="panel hidden">
-      <button class="closeBtn">&times;</button>
-      <p><strong>Occupancy Insights:</strong><br>Coming soon.</p>
-    </div>
-
-    <div id="panelDiagnostics" class="panel hidden">
-      <button class="closeBtn">&times;</button>
-      <p><strong>Diagnostics Panel:</strong><br>Coming soon.</p>
-    </div>
-
-    <div id="panelGeofencing" class="panel hidden">
-      <button class="closeBtn">&times;</button>
-      <p><strong>Geofencing Panel:</strong><br>Coming soon or embed here.</p>
-    </div>
-
   </div>
 
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script type="module" src="firebase.js"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>
