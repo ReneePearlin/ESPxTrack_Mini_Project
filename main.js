@@ -38,6 +38,11 @@ function initMap() {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
+
+  // Destination marker: St. Joseph's Institute of Technology
+  L.marker([12.86944, 80.21583])
+    .addTo(map)
+    .bindPopup("St. Joseph’s Institute of Technology");
 }
 
 function setupAuth() {
@@ -54,11 +59,11 @@ function loadBusData() {
       const d = doc.data();
       if (d.id && d.latitude && d.longitude) {
         busData[d.id] = { 
-          ...d, 
-          fuel: d.fuel ?? 'N/A', // Handle missing 'fuel'
-          occupancy: d.occupancy ?? 'N/A', // Handle missing 'occupancy'
-          capacity: d.capacity ?? 'N/A', // Handle missing 'capacity'
-          color: BUS_COLORS[i % BUS_COLORS.length] 
+          ...d,
+          fuel: d.fuel ?? 'N/A',
+          occupancy: d.occupancy ?? 'N/A',
+          capacity: d.capacity ?? 'N/A',
+          color: BUS_COLORS[i % BUS_COLORS.length]
         };
       }
     });
@@ -69,25 +74,35 @@ function loadBusData() {
 }
 
 function drawMarkers() {
-  // Remove old markers
+  // Clear old
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
-  Object.values(busData).forEach(bus => {
+  Object.values(busData).forEach((bus, idx) => {
+    // sanitize ID to numeric part
+    const idNum = bus.id.toString().replace(/\D/g, '');
+    const color = bus.color;
     const icon = L.divIcon({
       className: 'bus-marker',
-      html: `<div style="background:${bus.color};width:16px;height:16px;border-radius:50%;"></div>`,
-      iconSize: [16, 16]
+      html: `<div style="
+        background:${color};
+        width:20px;height:20px;
+        border-radius:50%;
+        border:2px solid white;
+      "></div>`,
+      iconSize: [24, 24]
     });
-    const m = L.marker([bus.latitude, bus.longitude], { icon })
+
+    const marker = L.marker([bus.latitude, bus.longitude], { icon })
       .addTo(map)
-      .bindPopup(`<strong>Bus No-${bus.id}</strong><br>${bus.routeName}`);
-    currentMarkers[bus.id] = m;
+      .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
+
+    currentMarkers[bus.id] = marker;
   });
 }
 
 function setupUI() {
-  // Sidebar buttons → feature panel
+  // Left sidebar feature buttons
   Object.keys(featureLabels).forEach(btnId => {
     document.getElementById(btnId).addEventListener('click', () => {
       currentFeature = featureLabels[btnId];
@@ -97,21 +112,21 @@ function setupUI() {
     });
   });
 
-  // Close button for the feature panel
+  // Close feature panel
   document.querySelector('#featurePanel .closeBtn')
     .addEventListener('click', () =>
       document.getElementById('featurePanel').classList.add('hidden')
     );
 
-  // Bus list toggle
+  // Load feature data button
+  document.getElementById('loadFeatureData')
+    .addEventListener('click', showFeatureData);
+
+  // Right sidebar: toggle bus list
   document.getElementById('toggleBusList')
     .addEventListener('click', () =>
       document.getElementById('busList').classList.toggle('hidden')
     );
-
-  // Show feature data
-  document.getElementById('loadFeatureData')
-    .addEventListener('click', showFeatureData);
 }
 
 function populateBusList() {
@@ -119,9 +134,8 @@ function populateBusList() {
   ul.innerHTML = '';
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
-    // Rename to "Bus No-X"
-    li.textContent = `Bus No-${bus.id}`;
-    // On click: zoom + show details
+    const idNum = bus.id.toString().replace(/\D/g, '');
+    li.textContent = `Bus No${idNum}`;
     li.addEventListener('click', () => zoomToBus(bus.id));
     ul.appendChild(li);
   });
@@ -132,15 +146,14 @@ function populateBusSelects() {
     sel.innerHTML = '<option value="">Select Bus…</option>';
     Object.values(busData).forEach(bus => {
       const o = document.createElement('option');
+      const idNum = bus.id.toString().replace(/\D/g, '');
       o.value = bus.id;
-      // Rename here as well
-      o.text = `Bus No-${bus.id}`;
+      o.text = `Bus No${idNum}`;
       sel.appendChild(o);
     });
   });
 }
 
-// Zoom the map to the chosen bus and open its popup
 function zoomToBus(busId) {
   const marker = currentMarkers[busId];
   if (!marker) return;
@@ -149,13 +162,13 @@ function zoomToBus(busId) {
   showBusDetails(busId);
 }
 
-// Populate and show the details panel under the bus list
 function showBusDetails(busId) {
   const b = busData[busId];
   const panel = document.getElementById('busDetailsPanel');
   panel.classList.remove('hidden');
 
-  document.getElementById('detailTitle').textContent = `Bus No-${b.id}`;
+  const idNum = b.id.toString().replace(/\D/g, '');
+  document.getElementById('detailTitle').textContent = `Bus No${idNum}`;
   document.getElementById('detailContent').innerHTML = `
     <p><strong>Route:</strong> ${b.routeName}</p>
     <p><strong>From:</strong> ${b.start}</p>
@@ -178,29 +191,24 @@ function showFeatureData() {
   let html = '';
   switch (currentFeature) {
     case 'Real-Time Status':
-      html = `
-        <p><strong>Lat:</strong> ${b.latitude}<br>
-        <strong>Lng:</strong> ${b.longitude}</p>`;
+      html = `<p><strong>Latitude:</strong> ${b.latitude}<br>
+              <strong>Longitude:</strong> ${b.longitude}</p>`;
       break;
     case 'Route Summary':
-      html = `
-        <p><strong>Route:</strong> ${b.routeName}<br>
-        <strong>From:</strong> ${b.start || 'N/A'}<br>
-        <strong>To:</strong> ${b.end || 'N/A'}</p>`;
+      html = `<p><strong>Route:</strong> ${b.routeName}<br>
+              <strong>From:</strong> ${b.start}<br>
+              <strong>To:</strong> ${b.end}</p>`;
       break;
     case 'Performance Metrics':
-      html = `
-        <p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
-        <strong>Fuel:</strong> ${b.fuel} %</p>`;
+      html = `<p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
+              <strong>Fuel:</strong> ${b.fuel}%</p>`;
       break;
     case 'Occupancy Insights':
-      html = `
-        <p><strong>Occupancy:</strong> ${b.occupancy} / ${b.capacity}</p>`;
+      html = `<p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>`;
       break;
     case 'Diagnostic Panel':
-      html = `
-        <p><strong>Battery:</strong> ${b.battery ?? 'Unknown'}<br>
-        <strong>Engine:</strong> ${b.engine ?? 'Unknown'}</p>`;
+      html = `<p><strong>Battery:</strong> ${b.battery}<br>
+              <strong>Engine:</strong> ${b.engine}</p>`;
       break;
     case 'Geofencing':
       const inZone = (
