@@ -5,11 +5,11 @@ import { signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth
 
 let map;
 let currentMarkers = {};
-let pastMarkers = [];
+let pastRouteMarkers = []; // store markers for past routes
 let busData = {};
 const BUS_COLORS = [
-  '#e74c3c','#3498db','#2ecc71','#f1c40f',
-  '#9b59b6','#e67e22','#1abc9c','#34495e'
+  '#e74c3c', '#3498db', '#2ecc71', '#f1c40f',
+  '#9b59b6', '#e67e22', '#1abc9c', '#34495e'
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMap() {
-  map = L.map('map').setView([13.04,80.23], 12);
+  map = L.map('map').setView([13.04, 80.23], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
-  L.marker([12.873,80.222])
+  L.marker([12.873, 80.222])
    .addTo(map)
    .bindPopup("St. Joseph’s Group of Colleges, OMR")
    .openPopup();
@@ -37,7 +37,7 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  const col = collection(db,'live_buses');
+  const col = collection(db, 'live_buses');
   onSnapshot(col, snap => {
     busData = {};
     snap.forEach((doc, i) => {
@@ -56,11 +56,11 @@ function loadBusData() {
 }
 
 function drawCurrentMarkers() {
-  // remove old
+  // remove old markers
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
-  // draw new
+  // draw new markers
   Object.values(busData).forEach(bus => {
     const marker = L.circleMarker([bus.latitude, bus.longitude], {
       radius: 8,
@@ -75,12 +75,12 @@ function drawCurrentMarkers() {
 
 function bindUI() {
   // Panel toggles
-  [['btnPastRoutes','panelPastRoutes']].forEach(([btn,panel]) => {
+  [['btnPastRoutes', 'panelPastRoutes']].forEach(([btn, panel]) => {
     document.getElementById(btn).addEventListener('click', () => {
       // hide all panels, then show this one
-      document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
       document.getElementById(panel).classList.remove('hidden');
-      clearPastMarkers();
+      clearPastRouteMarkers();
     });
   });
 
@@ -88,7 +88,7 @@ function bindUI() {
   document.querySelectorAll('.panel .closeBtn')
     .forEach(btn => btn.addEventListener('click', () => {
       btn.closest('.panel').classList.add('hidden');
-      clearPastMarkers();
+      clearPastRouteMarkers();
     }));
 
   // Show Past Route
@@ -124,10 +124,11 @@ function populatePastRoutesSelect() {
 }
 
 function plotPastRoute(busId) {
-  clearPastMarkers();
+  clearPastRouteMarkers();
   if (!busData[busId] || !Array.isArray(busData[busId].history)) {
     return alert(`No past-route data for ${busId}`);
   }
+
   busData[busId].history.forEach(pt => {
     const pm = L.circleMarker([pt.latitude, pt.longitude], {
       radius: 5,
@@ -135,11 +136,11 @@ function plotPastRoute(busId) {
       fillColor: busData[busId].color,
       fillOpacity: 0.6
     }).addTo(map);
-    pastMarkers.push(pm);
+    pastRouteMarkers.push(pm);
   });
 }
 
-function clearPastMarkers() {
-  pastMarkers.forEach(m => map.removeLayer(m));
-  pastMarkers = [];
+function clearPastRouteMarkers() {
+  pastRouteMarkers.forEach(m => map.removeLayer(m));
+  pastRouteMarkers = [];
 }
