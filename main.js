@@ -39,14 +39,16 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  const busesCol = collection(db, 'live_buses'); // assumes root-level collection
+  function loadBusData() {
+  const busesCol = collection(db, 'live_buses');
 
   onSnapshot(busesCol, snapshot => {
+    console.log("Snapshot size:", snapshot.size);
     busData = {};
     snapshot.forEach(doc => {
       const data = doc.data();
+      console.log("Bus data:", data);
 
-      // Filter only buses with coordinates
       if (data.latitude && data.longitude && data.id) {
         busData[data.id] = {
           id: data.id,
@@ -63,8 +65,8 @@ function loadBusData() {
     refreshMarkers();
     populateBusList();
   });
+}  
 }
-
 function refreshMarkers() {
   Object.values(markers).forEach(m => map.removeLayer(m));
   markers = {};
