@@ -1,31 +1,139 @@
-body, html { margin: 0; padding: 0; height: 100%; }
-#map { position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 0; }
-#app { position: relative; z-index: 1; }
+/* main.css */
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-.sidebar-left, .sidebar-right {
+/* Left Sidebar */
+.sidebar-left {
   position: absolute;
-  top: 0; bottom: 0;
+  top: 0;
+  left: 0;
   width: 200px;
-  background: #1E2A38;
+  height: 100%;
+  background: #2c3e50;
   color: white;
-  padding: 20px;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-left h2 {
+  margin: 0 0 20px;
+  font-size: 18px;
+}
+
+.sidebar-left button {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #34495e;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-left button:hover {
+  background: #3d5a73;
+}
+
+/* Right Sidebar */
+.sidebar-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 100%;
+  background: #ecf0f1;
+  padding: 20px 10px;
+  box-sizing: border-box;
+}
+
+#toggleBusList {
+  width: 100%;
+  padding: 10px;
+  background: #3498db;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#toggleBusList:hover {
+  background: #2980b9;
+}
+
+#busList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: calc(100% - 50px);
   overflow-y: auto;
 }
-.sidebar-left { left: 0; }
-.sidebar-right { right: 0; }
 
-.center-search {
+#busList li {
+  padding: 8px;
+  border-bottom: 1px solid #bdc3c7;
+  cursor: pointer;
+}
+
+#busList li:hover {
+  background: #dfe6e9;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Map fills the remaining space */
+#map {
   position: absolute;
-  top: 10px;
+  top: 0;
+  left: 200px;
+  right: 200px;
+  bottom: 0;
+}
+
+/* Center Search Panel */
+.center-panel {
+  position: absolute;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: white;
   padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 300px;
 }
 
-button { margin: 5px 0; width: 100%; padding: 10px; border: none; background: #4CAF50; color: white; border-radius: 5px; cursor: pointer; }
+.center-panel input {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-ul { list-style: none; padding: 0; }
-ul li { margin-bottom: 8px; cursor: pointer; }
+.center-panel button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #27ae60;
+  color: white;
+  cursor: pointer;
+}
+
+.center-panel button:hover {
+  background: #1e8449;
+}
+
+#busDetails {
+  margin-top: 10px;
+  font-size: 14px;
+}
