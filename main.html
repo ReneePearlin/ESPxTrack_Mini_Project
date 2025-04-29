@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Fleet Tracker</title>
-  <link rel="stylesheet" href="main.css" />
+  <title>Fleet Tracker Dashboard</title>
+  <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="firebase.js"></script>
 </head>
 <body>
   <div id="app">
     <div class="sidebar-left">
-      <h2>Controls</h2>
+      <h2>Menu</h2>
       <button>Notifications</button>
       <button>Past Routes</button>
       <button>Geofencing</button>
@@ -18,22 +19,17 @@
       <button>Analytics</button>
       <button onclick="logout()">Logout</button>
     </div>
-
-    <div class="map-container" id="map"></div>
-
+    <div id="map"></div>
     <div class="center-search">
-      <input type="text" id="busSearch" placeholder="Enter Bus Number" />
+      <input type="text" id="busSearch" placeholder="Search Bus Number" />
       <button onclick="searchBus()">Search</button>
       <div id="busDetails"></div>
     </div>
-
     <div class="sidebar-right">
-      <h2>Bus List</h2>
+      <h2>Buses</h2>
       <ul id="busList"></ul>
     </div>
   </div>
-
-  <script src="firebase.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
