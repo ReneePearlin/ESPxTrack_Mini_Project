@@ -53,7 +53,13 @@ function loadBusData() {
     snap.forEach((doc, i) => {
       const d = doc.data();
       if (d.id && d.latitude && d.longitude) {
-        busData[d.id] = { ...d, color: BUS_COLORS[i % BUS_COLORS.length] };
+        busData[d.id] = { 
+          ...d, 
+          fuel: d.fuel ?? 'N/A', // Handle missing 'fuel'
+          occupancy: d.occupancy ?? 'N/A', // Handle missing 'occupancy'
+          capacity: d.capacity ?? 'N/A', // Handle missing 'capacity'
+          color: BUS_COLORS[i % BUS_COLORS.length] 
+        };
       }
     });
     drawMarkers();
@@ -63,7 +69,7 @@ function loadBusData() {
 }
 
 function drawMarkers() {
-  // remove old
+  // Remove old markers
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
@@ -91,7 +97,7 @@ function setupUI() {
     });
   });
 
-  // Close
+  // Close button for the feature panel
   document.querySelector('#featurePanel .closeBtn')
     .addEventListener('click', () =>
       document.getElementById('featurePanel').classList.add('hidden')
@@ -155,11 +161,11 @@ function showFeatureData() {
     case 'Performance Metrics':
       html = `
         <p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
-        <strong>Fuel:</strong> ${b.fuel ?? 'N/A'}%</p>`;
+        <strong>Fuel:</strong> ${b.fuel} %</p>`; // Use the 'fuel' field
       break;
     case 'Occupancy Insights':
       html = `
-        <p><strong>Occupancy:</strong> ${b.occupancy ?? 'N/A'}/${b.capacity ?? 'N/A'}</p>`;
+        <p><strong>Occupancy:</strong> ${b.occupancy} / ${b.capacity}</p>`; // Use 'occupancy' and 'capacity'
       break;
     case 'Diagnostic Panel':
       html = `
