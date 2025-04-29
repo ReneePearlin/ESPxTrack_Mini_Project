@@ -32,8 +32,15 @@
 
     <!-- Feature Panel (reused for all sidebar buttons) -->
     <div id="featurePanel" class="panel hidden">
-      <button class="closeBtn">×</button>
-      <h2 id="featureTitle"></h2>
+  <div class="panel-header">
+    <span id="featureTitle">Feature Title</span>
+    <button class="closeBtn">&times;</button>
+  </div>
+  <label for="featureBusSelect">Choose Bus:</label>
+  <select id="featureBusSelect" class="bus-select"></select>
+  <button id="loadFeatureData">Show Data</button>
+  <div id="featureResult"></div>
+</div>
 
       <label for="featureBusSelect">Select Bus</label>
       <select id="featureBusSelect" class="bus-select"></select>
