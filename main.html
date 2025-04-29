@@ -2,63 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker | Dashboard</title>
+  <title>Fleet Tracker</title>
   <link rel="stylesheet" href="main.css" />
-
-  <!-- ✅ Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+e2W5SmjvKs25G8BaVHxkNvzFh+ZtxhWlLN39vlMI="
-    crossorigin=""
-  />
-
-  <script type="module">
-    import { auth } from './firebase.js';
-    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
-
-    onAuthStateChanged(auth, user => {
-      if (!user) window.location.href = 'index.html';
-    });
-
-    window.logout = () => {
-      signOut(auth).then(() => location.href = 'index.html');
-    };
-  </script>
-
-  <!-- ❌ Removed Google Maps script -->
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnb9bJMuLYQowSIU3GGewSMiwDyGTdjxw&callback=initMap" async defer></script> -->
-
-  <!-- ✅ Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-vxv5VSbQ0KmtVcrA69Tb/F5SjXb/v/xbpV4FvFvCjDE="
-    crossorigin=""
-    defer
-  ></script>
-
-  <!-- Keep your existing script -->
-  <script type="module" src="main.js" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <h2>Menu</h2>
-      <button id="liveRoutesBtn">Live Routes</button>
-      <button id="pastRoutesBtn">Past Routes</button>
-      <button id="notificationsBtn">Notifications</button>
-      <button onclick="logout()" class="logout-btn">Logout</button>
-    </aside>
+  <div id="app">
+    <div class="sidebar-left">
+      <h2>Controls</h2>
+      <button>Notifications</button>
+      <button>Past Routes</button>
+      <button>Geofencing</button>
+      <button>Route Deviation</button>
+      <button>Analytics</button>
+      <button onclick="logout()">Logout</button>
+    </div>
 
-    <!-- This div will now be used by Leaflet instead of Google Maps -->
-    <div id="map" class="map-container"></div>
+    <div class="map-container" id="map"></div>
 
-    <div class="search-overlay">
-      <input type="text" id="busNumberInput" placeholder="Bus Number" />
-      <input type="text" id="busRouteInput" placeholder="Bus Route" />
-      <button id="searchBtn">Search</button>
+    <div class="center-search">
+      <input type="text" id="busSearch" placeholder="Enter Bus Number" />
+      <button onclick="searchBus()">Search</button>
+      <div id="busDetails"></div>
+    </div>
+
+    <div class="sidebar-right">
+      <h2>Bus List</h2>
+      <ul id="busList"></ul>
     </div>
   </div>
+
+  <script src="firebase.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
