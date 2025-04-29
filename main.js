@@ -1,19 +1,14 @@
 // main.js
 import { auth, db } from './firebase.js';
-import {
-  collection,
-  onSnapshot
-} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
-import {
-  signOut
-} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import { collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import { signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
-let map, markers = {}, busData = {};
+let map, routeLayers = {}, busData = {}, pastRouteLayer;
 
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
   setupAuth();
-  loadBusData();  // calls the single, correct function
+  loadBusData();
   bindUI();
 });
 
@@ -23,7 +18,8 @@ function initMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  L.marker([12.873, 80.222]) // St. Joseph’s Group of Colleges
+  // fixed destination marker
+  L.marker([12.873, 80.222])
     .addTo(map)
     .bindPopup("St. Joseph’s Group of Colleges, OMR")
     .openPopup();
@@ -31,89 +27,109 @@ function initMap() {
 
 function setupAuth() {
   document.getElementById('btnLogout')
-    .addEventListener('click', () => {
-      signOut(auth).then(() => {
-        window.location.href = 'index.html';
-      });
-    });
+    .addEventListener('click', () =>
+      signOut(auth).then(() => window.location.href = 'index.html')
+    );
 }
 
 function loadBusData() {
   const busesCol = collection(db, 'live_buses');
-
   onSnapshot(busesCol, snapshot => {
-    console.log("Snapshot size:", snapshot.size);
     busData = {};
-
     snapshot.forEach(doc => {
-      const data = doc.data();
-      console.log("Bus data:", data);
-
-      if (data.latitude && data.longitude && data.id) {
-        busData[data.id] = {
-          id: data.id,
-          lat: data.latitude,
-          lng: data.longitude,
-          route: data.routeName,
-          status: data.status,
-          nextStop: data.nextStop,
-          speed: data.speed
+      const d = doc.data();
+      if (d.latitude && d.longitude && d.id) {
+        busData[d.id] = {
+          id: d.id,
+          lat: d.latitude,
+          lng: d.longitude,
+          route: d.routeName,
+          status: d.status,
+          nextStop: d.nextStop,
+          speed: d.speed,
+          history: d.history || []  // option for past coordinates
         };
       }
     });
 
-    refreshMarkers();
+    drawCurrentRoutes();
     populateBusList();
-  }, err => {
-    console.error("Error loading buses:", err);
+    populatePastRoutesSelect();
   });
 }
 
-function refreshMarkers() {
-  // Remove old markers
-  Object.values(markers).forEach(m => map.removeLayer(m));
-  markers = {};
+function drawCurrentRoutes() {
+  // remove old
+  Object.values(routeLayers).forEach(l => map.removeLayer(l));
+  routeLayers = {};
 
-  // Add updated ones
+  // draw dashed line from each bus to college
   Object.values(busData).forEach(bus => {
-    const m = L.marker([bus.lat, bus.lng])
-      .addTo(map)
-      .bindPopup(`
-        <strong>${bus.id}</strong><br>
-        Route: ${bus.route}<br>
-        Next Stop: ${bus.nextStop}<br>
-        Status: ${bus.status}<br>
-        Speed: ${bus.speed?.toFixed(1)} km/h
-      `);
-    markers[bus.id] = m;
+    const line = L.polyline(
+      [[bus.lat, bus.lng], [12.873, 80.222]],
+      { dashArray: '5,10' }
+    ).addTo(map)
+     .bindPopup(`<strong>${bus.id}</strong><br>Route to Campus`);
+    routeLayers[bus.id] = line;
   });
 }
 
 function bindUI() {
-  ['btnNotifications','btnPastRoutes','btnGeofencing','btnRouteDev','btnAnalytics']
-    .forEach(id => {
-      document.getElementById(id)
-        .addEventListener('click', () => {
-          alert(`${id} clicked — implement this feature`);
-        });
-    });
+  // Sidebar panels
+  const features = [
+    { btn: 'btnNotifications', panel: 'panelNotifications' },
+    { btn: 'btnPastRoutes',   panel: 'panelPastRoutes'   },
+    { btn: 'btnGeofencing',   panel: 'panelGeofencing'   },
+    { btn: 'btnRouteDev',     panel: 'panelRouteDev'     },
+    { btn: 'btnAnalytics',    panel: 'panelAnalytics'    }
+  ];
+  features.forEach(f => {
+    document.getElementById(f.btn)
+      .addEventListener('click', () => showPanel(f.panel));
+  });
 
+  // Close buttons
+  document.querySelectorAll('.panel .closeBtn')
+    .forEach(btn => btn.addEventListener('click', () =>
+      btn.closest('.panel').classList.add('hidden')
+    ));
+
+  // Bus list toggle
   document.getElementById('toggleBusList')
+    .addEventListener('click', () =>
+      document.getElementById('busList').classList.toggle('hidden')
+    );
+
+  // Search
+  document.getElementById('searchBtn')
     .addEventListener('click', () => {
-      document.getElementById('busList').classList.toggle('hidden');
+      const num = document.getElementById('busSearch').value.trim();
+      if (busData[num]) focusBus(num);
     });
 
-  document.getElementById('searchBtn')
-    .addEventListener('click', searchBus);
+  // Past Routes: show on button
+  document.getElementById('showPastRouteBtn')
+    .addEventListener('click', () => {
+      const busId = document.getElementById('pastRoutesBusSelect').value;
+      drawPastRoute(busId);
+    });
 
+  // Clicking a bus in the list
   document.getElementById('busList')
     .addEventListener('click', e => {
       if (e.target.tagName === 'LI') {
         const num = e.target.dataset.bus;
         focusBus(num);
-        showBusDetails(num);
       }
     });
+}
+
+function showPanel(panelId) {
+  // hide all
+  document.querySelectorAll('#panelContainer .panel')
+    .forEach(p => p.classList.add('hidden'));
+  // show requested
+  document.getElementById(panelId).classList.remove('hidden');
 }
 
 function populateBusList() {
@@ -127,32 +143,36 @@ function populateBusList() {
   });
 }
 
-function searchBus() {
-  const num = document.getElementById('busSearch').value.trim();
-  if (!busData[num]) {
-    document.getElementById('busDetails').textContent = `No bus ${num} found`;
-    return;
-  }
-  focusBus(num);
-  showBusDetails(num);
+function populatePastRoutesSelect() {
+  const sel = document.getElementById('pastRoutesBusSelect');
+  sel.innerHTML = `<option value="">Select Bus…</option>`;
+  Object.values(busData).forEach(bus => {
+    const opt = document.createElement('option');
+    opt.value = bus.id;
+    opt.text = `Bus ${bus.id}`;
+    sel.appendChild(opt);
+  });
 }
 
-function focusBus(num) {
-  const marker = markers[num];
-  if (marker) {
-    marker.openPopup();
-    map.panTo(marker.getLatLng());
+function drawPastRoute(busId) {
+  // remove old
+  if (pastRouteLayer) map.removeLayer(pastRouteLayer);
+  const bus = busData[busId];
+  if (!bus || !bus.history.length) {
+    return alert(`No past-route data for ${busId}`);
   }
+  pastRouteLayer = L.polyline(
+    bus.history.map(pt => [pt.latitude, pt.longitude]),
+    { color: '#e67e22' }
+  ).addTo(map);
+  map.fitBounds(pastRouteLayer.getBounds());
 }
 
-function showBusDetails(busNumber) {
-  const bus = busData[busNumber];
-  document.getElementById('busDetails').innerHTML = `
-    <strong>${bus.id}</strong><br>
-    Route: ${bus.route}<br>
-    Next Stop: ${bus.nextStop}<br>
-    Speed: ${bus.speed?.toFixed(1)} km/h<br>
-    Status: ${bus.status}<br>
-    Destination: St. Joseph’s Group of Colleges, OMR
-  `;
+function focusBus(busId) {
+  // pan to start of dashed line
+  const layer = routeLayers[busId];
+  if (layer) {
+    layer.openPopup();
+    map.panTo(layer.getLatLngs()[0]);
+  }
 }
