@@ -13,7 +13,7 @@ let map, markers = {}, busData = {};
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
   setupAuth();
-  loadBusData();
+  loadBusData();  // calls the single, correct function
   bindUI();
 });
 
@@ -39,12 +39,12 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  function loadBusData() {
   const busesCol = collection(db, 'live_buses');
 
   onSnapshot(busesCol, snapshot => {
     console.log("Snapshot size:", snapshot.size);
     busData = {};
+
     snapshot.forEach(doc => {
       const data = doc.data();
       console.log("Bus data:", data);
@@ -64,13 +64,17 @@ function loadBusData() {
 
     refreshMarkers();
     populateBusList();
+  }, err => {
+    console.error("Error loading buses:", err);
   });
-}  
 }
+
 function refreshMarkers() {
+  // Remove old markers
   Object.values(markers).forEach(m => map.removeLayer(m));
   markers = {};
 
+  // Add updated ones
   Object.values(busData).forEach(bus => {
     const m = L.marker([bus.lat, bus.lng])
       .addTo(map)
