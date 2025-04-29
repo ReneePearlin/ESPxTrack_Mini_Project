@@ -2,34 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker Dashboard</title>
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="firebase.js"></script>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="main.css" />
+
 </head>
 <body>
   <div id="app">
-    <div class="sidebar-left">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
       <h2>Menu</h2>
       <button>Notifications</button>
       <button>Past Routes</button>
       <button>Geofencing</button>
-      <button>Route Deviation</button>
-      <button>Analytics</button>
+      <button>Route Deviation Alerts</button>
+      <button>Reporting & Analytics</button>
       <button onclick="logout()">Logout</button>
-    </div>
+    </aside>
+
+    <!-- Map Container -->
     <div id="map"></div>
-    <div class="center-search">
-      <input type="text" id="busSearch" placeholder="Search Bus Number" />
+
+    <!-- Center Search Panel -->
+    <div class="center-panel">
+      <input
+        type="text"
+        id="busSearch"
+        placeholder="Search by Bus Number"
+      />
       <button onclick="searchBus()">Search</button>
       <div id="busDetails"></div>
     </div>
-    <div class="sidebar-right">
-      <h2>Buses</h2>
+
+    <!-- Right Sidebar (Bus List) -->
+    <aside class="sidebar-right">
+      <h2>Bus List</h2>
       <ul id="busList"></ul>
-    </div>
+    </aside>
   </div>
-  <script src="main.js"></script>
+
+  <!-- Firebase + Map Logic -->
+  <script type="module" src="main.js" defer></script>
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet/dist/leaflet.js"
+    defer
+  ></script>
 </body>
 </html>
