@@ -110,6 +110,7 @@ html, body, #app {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   width: 300px;
+  z-index: 10;
 }
 
 .center-panel input {
@@ -137,3 +138,109 @@ html, body, #app {
   margin-top: 10px;
   font-size: 14px;
 }
+
+/* Panel Styling */
+.panel {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 200px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.panel.hidden {
+  display: none;
+}
+
+.panel .closeBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.panel .closeBtn:hover {
+  color: red;
+}
+
+.panel label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.panel select,
+.panel button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.panel button {
+  background: #f39c12;
+  color: white;
+  cursor: pointer;
+}
+
+.panel button:hover {
+  background: #e67e22;
+}
+
+#pastRoutesBusSelect {
+  width: 100%;
+}
+
+/* Styling for Bus Selection and Display */
+#busList li.selected {
+  background: #3498db;
+  color: white;
+}
+
+/* Additional Styling for the Map and Markers */
+.leaflet-marker-icon {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: block;
+  background-color: #2c3e50;
+}
+
+.leaflet-marker-icon.bus-marker {
+  background-color: #e74c3c;
+}
+
+.leaflet-marker-icon.bus-marker.green {
+  background-color: #2ecc71;
+}
+
+.leaflet-marker-icon.bus-marker.blue {
+  background-color: #3498db;
+}
+
+.leaflet-marker-icon.bus-marker.yellow {
+  background-color: #f1c40f;
+}
+
+.leaflet-marker-icon.bus-marker.purple {
+  background-color: #9b59b6;
+}
+
+.leaflet-marker-icon.bus-marker.orange {
+  background-color: #e67e22;
+}
+
+.leaflet-marker-icon.bus-marker.teal {
+  background-color: #1abc9c;
+}
+
+.leaflet-marker-icon.bus-marker.grey {
+  background-color: #34495e;
+}
+
