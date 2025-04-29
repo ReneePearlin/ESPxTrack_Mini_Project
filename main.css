@@ -19,10 +19,11 @@ html, body, #app {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  z-index: 1000;
 }
 
 .sidebar-left h2 {
-  margin: 0 0 20px;
+  margin-bottom: 20px;
   font-size: 18px;
 }
 
@@ -51,6 +52,8 @@ html, body, #app {
   background: #ecf0f1;
   padding: 20px 10px;
   box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
 #toggleBusList {
@@ -86,17 +89,13 @@ html, body, #app {
   background: #dfe6e9;
 }
 
-.hidden {
-  display: none;
+#busList li.selected {
+  background: #3498db;
+  color: white;
 }
 
-/* Map fills the remaining space */
-#map {
-  position: absolute;
-  top: 0;
-  left: 200px;
-  right: 200px;
-  bottom: 0;
+.hidden {
+  display: none;
 }
 
 /* Center Search Panel */
@@ -110,7 +109,7 @@ html, body, #app {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   width: 300px;
-  z-index: 10;
+  z-index: 1100;
 }
 
 .center-panel input {
@@ -139,16 +138,27 @@ html, body, #app {
   font-size: 14px;
 }
 
-/* Panel Styling */
+/* Map fills space between sidebars */
+#map {
+  position: absolute;
+  top: 0;
+  left: 200px;
+  right: 200px;
+  bottom: 0;
+  z-index: 0;
+}
+
+/* Panels (e.g., Past Routes) */
 .panel {
   position: absolute;
   top: 50px;
-  right: 0;
-  width: 200px;
+  right: 210px;
+  width: 220px;
   background: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 15px;
   border-radius: 8px;
+  z-index: 1100;
 }
 
 .panel.hidden {
@@ -197,50 +207,11 @@ html, body, #app {
   width: 100%;
 }
 
-/* Styling for Bus Selection and Display */
-#busList li.selected {
-  background: #3498db;
-  color: white;
-}
-
-/* Additional Styling for the Map and Markers */
-.leaflet-marker-icon {
-  border-radius: 50%;
+/* Leaflet Custom Bus Markers (Optional enhancement) */
+.leaflet-marker-icon.bus-marker {
+  border-radius: 4px;
   width: 30px;
   height: 30px;
-  display: block;
-  background-color: #2c3e50;
+  background-size: cover;
+  background-position: center;
 }
-
-.leaflet-marker-icon.bus-marker {
-  background-color: #e74c3c;
-}
-
-.leaflet-marker-icon.bus-marker.green {
-  background-color: #2ecc71;
-}
-
-.leaflet-marker-icon.bus-marker.blue {
-  background-color: #3498db;
-}
-
-.leaflet-marker-icon.bus-marker.yellow {
-  background-color: #f1c40f;
-}
-
-.leaflet-marker-icon.bus-marker.purple {
-  background-color: #9b59b6;
-}
-
-.leaflet-marker-icon.bus-marker.orange {
-  background-color: #e67e22;
-}
-
-.leaflet-marker-icon.bus-marker.teal {
-  background-color: #1abc9c;
-}
-
-.leaflet-marker-icon.bus-marker.grey {
-  background-color: #34495e;
-}
-
