@@ -1,49 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker | Home</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="app.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Fleet Tracker - Home</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="auth-page">
-
-  <div class="auth-container">
+<body>
+  <div class="container">
     <h1>Fleet Tracker</h1>
-
-    <div class="tabs">
-      <button class="tab-btn active" onclick="toggleTab('login')">Login</button>
-      <button class="tab-btn" onclick="toggleTab('signup')">Sign Up</button>
-    </div>
-
-    <div class="form-area" id="login">
-      <input type="email" id="loginEmail" placeholder="Email" />
-      <input type="password" id="loginPassword" placeholder="Password" />
-      <button id="loginBtn" class="primary-btn">Login</button>
-    </div>
-
-    <div class="form-area hidden" id="signup">
-      <input type="email" id="signupEmail" placeholder="Email" />
-      <input type="password" id="signupPassword" placeholder="Password" />
-      <button id="signupBtn" class="primary-btn">Sign Up</button>
-    </div>
-
-    <div class="divider">or</div>
-
-    <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
-
-    <p id="status" class="status-msg"></p>
+    <button onclick="location.href='login.html'">Login</button>
+    <button onclick="location.href='signup.html'">Sign Up</button>
   </div>
-
-  <script>
-    function toggleTab(tab) {
-      document.getElementById('login').classList.toggle('hidden', tab !== 'login');
-      document.getElementById('signup').classList.toggle('hidden', tab !== 'signup');
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`[onclick="toggleTab('${tab}')"]`).classList.add('active');
-    }
-  </script>
 </body>
 </html>
