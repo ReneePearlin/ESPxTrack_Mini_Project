@@ -1,4 +1,3 @@
-// main.js
 import { auth, db } from './firebase.js';
 import { collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
 import { signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
@@ -60,15 +59,17 @@ function drawCurrentMarkers() {
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
-  // draw new markers
+  // draw new bus markers (using bus-shaped icons)
   Object.values(busData).forEach(bus => {
-    const marker = L.circleMarker([bus.latitude, bus.longitude], {
-      radius: 8,
-      color: bus.color,
-      fillColor: bus.color,
-      fillOpacity: 0.9
-    }).addTo(map)
-      .bindPopup(`<strong>${bus.id}</strong><br>${bus.routeName}`);
+    const busIcon = L.icon({
+      iconUrl: 'path/to/bus-icon.png', // Update with your custom bus icon URL
+      iconSize: [30, 50],  // Size of the bus marker
+      iconAnchor: [15, 25],  // Position the marker correctly
+      popupAnchor: [0, -25]
+    });
+
+    const marker = L.marker([bus.latitude, bus.longitude], { icon: busIcon }).addTo(map)
+      .bindPopup(`<strong>Bus ${bus.id}</strong><br>${bus.routeName}`);
     currentMarkers[bus.id] = marker;
   });
 }
