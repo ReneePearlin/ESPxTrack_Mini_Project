@@ -4,50 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker Dashboard</title>
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Your custom CSS -->
   <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
-
 <body>
   <div id="app">
-    <div class="sidebar-left">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
       <h2>Fleet Panel</h2>
-      <button id="btnRealTime">Real-Time Status</button>
+      <button id="btnRealTimeStatus">Real-Time Status</button>
       <button id="btnRouteSummary">Route Summary</button>
-      <button id="btnPerformance">Performance Metrics</button>
-      <button id="btnOccupancy">Occupancy Insights</button>
-      <button id="btnDiagnostics">Diagnostic Panel</button>
+      <button id="btnPerformanceMetrics">Performance Metrics</button>
+      <button id="btnOccupancyInsights">Occupancy Insights</button>
+      <button id="btnDiagnosticPanel">Diagnostic Panel</button>
       <button id="btnGeofencing">Geofencing</button>
       <button id="btnLogout">Logout</button>
-    </div>
+    </aside>
+
+    <!-- Map -->
     <div id="map"></div>
 
-    <!-- Panels (reusable for all feature buttons) -->
-    <div class="panel hidden" id="featurePanel">
-      <button class="closeBtn">&times;</button>
-      <label for="featureBusSelect">Select Bus</label>
-      <select id="featureBusSelect"></select>
-      <button id="loadFeatureData">Show Info</button>
-      <div id="featureResult"></div>
-    </div>
-  </div>
-  <!-- Map -->
-    <div id="map"></div>
-  <!-- Right Sidebar -->
+    <!-- Right Sidebar -->
     <aside class="sidebar-right">
       <button id="toggleBusList">Bus List ▾</button>
       <ul id="busList" class="hidden"></ul>
     </aside>
 
+    <!-- Central Search (optional—you can remove or repurpose) -->
+    <div class="center-panel">
+      <input id="searchInput" type="text" placeholder="Enter Bus Number" />
+      <button id="searchBtn">Search</button>
+      <div id="busDetails"></div>
+    </div>
 
-!-- Leaflet JS -->
+    <!-- Feature Panel (reused for all sidebar buttons) -->
+    <div id="featurePanel" class="panel hidden">
+      <button class="closeBtn">×</button>
+      <h2 id="featureTitle"></h2>
+
+      <label for="featureBusSelect">Select Bus</label>
+      <select id="featureBusSelect" class="bus-select"></select>
+
+      <button id="loadFeatureData">Show Info</button>
+      <div id="featureResult"></div>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
- main html
