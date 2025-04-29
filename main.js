@@ -18,13 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMap() {
-  map = L.map('map').setView([12.8722, 80.2194], 13);
+  map = L.map('map').setView([13.04, 80.23], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // Fixed destination
-  L.marker([12.873, 80.222])
+  L.marker([12.873, 80.222]) // St. Joseph’s Group of Colleges
     .addTo(map)
     .bindPopup("St. Joseph’s Group of Colleges, OMR")
     .openPopup();
@@ -40,40 +39,51 @@ function setupAuth() {
 }
 
 function loadBusData() {
-  const busesCol = collection(db, 'buses');
+  const busesCol = collection(db, 'buses'); // assumes root-level collection
+
   onSnapshot(busesCol, snapshot => {
-    // Build a simple map of busNumber→busInfo
     busData = {};
     snapshot.forEach(doc => {
       const data = doc.data();
-      // assume each doc has fields: busNumber, lat, lng, route
-      busData[data.busNumber] = { ...data };
+
+      // Filter only buses with coordinates
+      if (data.latitude && data.longitude && data.id) {
+        busData[data.id] = {
+          id: data.id,
+          lat: data.latitude,
+          lng: data.longitude,
+          route: data.routeName,
+          status: data.status,
+          nextStop: data.nextStop,
+          speed: data.speed
+        };
+      }
     });
 
-    console.log('Loaded busData:', busData);
     refreshMarkers();
     populateBusList();
-  }, err => {
-    console.error("Firestore listen failed:", err);
   });
 }
 
 function refreshMarkers() {
-  // Clear old markers
   Object.values(markers).forEach(m => map.removeLayer(m));
   markers = {};
 
-  // Add new ones
   Object.values(busData).forEach(bus => {
     const m = L.marker([bus.lat, bus.lng])
       .addTo(map)
-      .bindPopup(`Bus ${bus.busNumber}<br>${bus.route}`);
-    markers[bus.busNumber] = m;
+      .bindPopup(`
+        <strong>${bus.id}</strong><br>
+        Route: ${bus.route}<br>
+        Next Stop: ${bus.nextStop}<br>
+        Status: ${bus.status}<br>
+        Speed: ${bus.speed?.toFixed(1)} km/h
+      `);
+    markers[bus.id] = m;
   });
 }
 
 function bindUI() {
-  // Sidebar‐buttons are still placeholders:
   ['btnNotifications','btnPastRoutes','btnGeofencing','btnRouteDev','btnAnalytics']
     .forEach(id => {
       document.getElementById(id)
@@ -82,25 +92,22 @@ function bindUI() {
         });
     });
 
-  // Toggle bus list
-  const busListEl = document.getElementById('busList');
   document.getElementById('toggleBusList')
     .addEventListener('click', () => {
-      busListEl.classList.toggle('hidden');
+      document.getElementById('busList').classList.toggle('hidden');
     });
 
-  // Search
   document.getElementById('searchBtn')
     .addEventListener('click', searchBus);
 
-  // Click list‐item
-  busListEl.addEventListener('click', e => {
-    if (e.target.tagName === 'LI') {
-      const num = e.target.dataset.bus;
-      focusBus(num);
-      showBusDetails(num);
-    }
-  });
+  document.getElementById('busList')
+    .addEventListener('click', e => {
+      if (e.target.tagName === 'LI') {
+        const num = e.target.dataset.bus;
+        focusBus(num);
+        showBusDetails(num);
+      }
+    });
 }
 
 function populateBusList() {
@@ -108,8 +115,8 @@ function populateBusList() {
   ul.innerHTML = '';
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
-    li.textContent = `Bus ${bus.busNumber}`;
-    li.dataset.bus = bus.busNumber;
+    li.textContent = `Bus ${bus.id}`;
+    li.dataset.bus = bus.id;
     ul.appendChild(li);
   });
 }
@@ -135,9 +142,11 @@ function focusBus(num) {
 function showBusDetails(busNumber) {
   const bus = busData[busNumber];
   document.getElementById('busDetails').innerHTML = `
-    <strong>Bus ${bus.busNumber}</strong><br>
+    <strong>${bus.id}</strong><br>
     Route: ${bus.route}<br>
-    Location: [${bus.lat.toFixed(4)}, ${bus.lng.toFixed(4)}]<br>
+    Next Stop: ${bus.nextStop}<br>
+    Speed: ${bus.speed?.toFixed(1)} km/h<br>
+    Status: ${bus.status}<br>
     Destination: St. Joseph’s Group of Colleges, OMR
   `;
 }
