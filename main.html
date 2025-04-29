@@ -13,22 +13,22 @@
 
   <!-- Your custom CSS -->
   <link rel="stylesheet" href="main.css" />
-
 </head>
+
 <body>
   <div id="app">
     <!-- Left Sidebar -->
     <aside class="sidebar-left">
       <h2>Menu</h2>
-      <button>Notifications</button>
-      <button>Past Routes</button>
-      <button>Geofencing</button>
-      <button>Route Deviation Alerts</button>
-      <button>Reporting & Analytics</button>
-      <button onclick="logout()">Logout</button>
+      <button id="btnNotifications">Notifications</button>
+      <button id="btnPastRoutes">Past Routes</button>
+      <button id="btnGeofencing">Geofencing</button>
+      <button id="btnRouteDev">Route Deviation Alerts</button>
+      <button id="btnAnalytics">Reporting & Analytics</button>
+      <button id="btnLogout">Logout</button>
     </aside>
 
-    <!-- Map Container -->
+    <!-- Map -->
     <div id="map"></div>
 
     <!-- Center Search Panel -->
@@ -36,25 +36,25 @@
       <input
         type="text"
         id="busSearch"
-        placeholder="Search by Bus Number"
+        placeholder="Search Bus Number"
       />
-      <button onclick="searchBus()">Search</button>
+      <button id="searchBtn">Search</button>
       <div id="busDetails"></div>
     </div>
 
-    <!-- Right Sidebar (Bus List) -->
+    <!-- Right Sidebar -->
     <aside class="sidebar-right">
-      <h2>Bus List</h2>
-      <ul id="busList"></ul>
+      <button id="toggleBusList">Bus List ▾</button>
+      <ul id="busList" class="hidden"></ul>
     </aside>
   </div>
 
-  <!-- Firebase + Map Logic -->
-  <script type="module" src="main.js" defer></script>
   <!-- Leaflet JS -->
   <script
     src="https://unpkg.com/leaflet/dist/leaflet.js"
     defer
   ></script>
+  <!-- Firebase + App Logic -->
+  <script type="module" src="main.js" defer></script>
 </body>
 </html>
