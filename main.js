@@ -35,16 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initMap() {
   map = L.map('map').setView([13.04, 80.23], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // ✅ Mark St. Joseph’s Institute of Technology
-  const stJosephsCoords = [12.86944, 80.21583];
-  L.marker(stJosephsCoords)
+  // Destination marker: St. Joseph's Institute of Technology
+  L.marker([12.86944, 80.21583])
     .addTo(map)
-    .bindPopup("<strong>St. Joseph’s Institute of Technology</strong>")
-    .openPopup();
+    .bindPopup("St. Joseph’s Institute of Technology");
 }
 
 function setupAuth() {
@@ -60,14 +58,11 @@ function loadBusData() {
     snap.forEach((doc, i) => {
       const d = doc.data();
       if (d.id && d.latitude && d.longitude) {
-        busData[d.id] = {
+        busData[d.id] = { 
           ...d,
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
           capacity: d.capacity ?? 'N/A',
-          battery: d.battery ?? 'N/A',
-          engine: d.engine ?? 'N/A',
-          speed: d.speed ?? 'N/A',
           color: BUS_COLORS[i % BUS_COLORS.length]
         };
       }
@@ -79,35 +74,30 @@ function loadBusData() {
 }
 
 function drawMarkers() {
+  // Clear old
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
   Object.values(busData).forEach((bus, idx) => {
+    // sanitize ID to numeric part
     const idNum = bus.id.toString().replace(/\D/g, '');
     const color = bus.color;
     const icon = L.divIcon({
       className: 'bus-marker',
-      html: `<div style="
-        background:${color};
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 0 5px rgba(0,0,0,0.5);
-      "></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      html: `<div style="background:${color}; width:20px;height:20px; border-radius:50%; border:2px solid white;"></div>`,
+      iconSize: [24, 24]
     });
 
     const marker = L.marker([bus.latitude, bus.longitude], { icon })
       .addTo(map)
-      .bindPopup(`<strong>Bus No ${idNum}</strong><br>${bus.routeName}`);
+      .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
 
     currentMarkers[bus.id] = marker;
   });
 }
 
 function setupUI() {
+  // Left sidebar feature buttons
   Object.keys(featureLabels).forEach(btnId => {
     document.getElementById(btnId).addEventListener('click', () => {
       currentFeature = featureLabels[btnId];
@@ -117,14 +107,17 @@ function setupUI() {
     });
   });
 
+  // Close feature panel
   document.querySelector('#featurePanel .closeBtn')
     .addEventListener('click', () =>
       document.getElementById('featurePanel').classList.add('hidden')
     );
 
+  // Load feature data button
   document.getElementById('loadFeatureData')
     .addEventListener('click', showFeatureData);
 
+  // Right sidebar: toggle bus list
   document.getElementById('toggleBusList')
     .addEventListener('click', () =>
       document.getElementById('busList').classList.toggle('hidden')
@@ -137,7 +130,7 @@ function populateBusList() {
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
     const idNum = bus.id.toString().replace(/\D/g, '');
-    li.textContent = `Bus No ${idNum}`;
+    li.textContent = `Bus No${idNum}`;
     li.addEventListener('click', () => zoomToBus(bus.id));
     ul.appendChild(li);
   });
@@ -150,7 +143,7 @@ function populateBusSelects() {
       const o = document.createElement('option');
       const idNum = bus.id.toString().replace(/\D/g, '');
       o.value = bus.id;
-      o.text = `Bus No ${idNum}`;
+      o.text = `Bus No${idNum}`;
       sel.appendChild(o);
     });
   });
@@ -170,7 +163,7 @@ function showBusDetails(busId) {
   panel.classList.remove('hidden');
 
   const idNum = b.id.toString().replace(/\D/g, '');
-  document.getElementById('detailTitle').textContent = `Bus No ${idNum}`;
+  document.getElementById('detailTitle').textContent = `Bus No${idNum}`;
   document.getElementById('detailContent').innerHTML = `
     <p><strong>Route:</strong> ${b.routeName}</p>
     <p><strong>From:</strong> ${b.start}</p>
@@ -189,36 +182,29 @@ function showFeatureData() {
     out.innerHTML = '<p style="color:red;">Please select a valid bus.</p>';
     return;
   }
-
   const b = busData[busId];
   let html = '';
-
   switch (currentFeature) {
     case 'Real-Time Status':
       html = `<p><strong>Latitude:</strong> ${b.latitude}<br>
               <strong>Longitude:</strong> ${b.longitude}</p>`;
       break;
-
     case 'Route Summary':
       html = `<p><strong>Route:</strong> ${b.routeName}<br>
               <strong>From:</strong> ${b.start}<br>
               <strong>To:</strong> ${b.end}</p>`;
       break;
-
     case 'Performance Metrics':
-      html = `<p><strong>Speed:</strong> ${b.speed} km/h<br>
+      html = `<p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
               <strong>Fuel:</strong> ${b.fuel}%</p>`;
       break;
-
     case 'Occupancy Insights':
       html = `<p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>`;
       break;
-
     case 'Diagnostic Panel':
       html = `<p><strong>Battery:</strong> ${b.battery}<br>
               <strong>Engine:</strong> ${b.engine}</p>`;
       break;
-
     case 'Geofencing':
       const inZone = (
         b.latitude >= 12.85 && b.latitude <= 13.1 &&
@@ -227,6 +213,5 @@ function showFeatureData() {
       html = `<p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>`;
       break;
   }
-
   out.innerHTML = html;
 }
