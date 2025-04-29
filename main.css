@@ -150,6 +150,7 @@ html, body, #app {
 
 /* Panels (e.g., Past Routes) */
 /* Enhanced Panel (Feature Panel) Styling */
+/* Feature Panel Styling */
 .panel {
   position: absolute;
   top: 60px;
@@ -230,6 +231,7 @@ html, body, #app {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 
 /* Leaflet Custom Bus Markers (Optional enhancement) */
 .leaflet-marker-icon.bus-marker {
