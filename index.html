@@ -4,26 +4,22 @@
   <meta charset="UTF-8" />
   <title>Fleet Tracker - Login</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="firebase.js"></script>
+  <script type="module" src="app.js" defer></script>
 </head>
 <body>
   <div class="auth-container">
     <h2>Welcome to Fleet Tracker</h2>
 
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
 
     <div class="auth-buttons">
-      <button onclick="login()">Login</button>
-      <button onclick="signup()">Sign Up</button>
-      <button onclick="googleSignIn()" class="google-btn">Sign in with Google</button>
+      <button id="loginBtn">Login</button>
+      <button id="signupBtn">Sign Up</button>
+      <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
     </div>
 
-    <p id="message"></p>
+    <p id="status"></p>
   </div>
-
-  <script src="auth.js"></script>
 </body>
 </html>
