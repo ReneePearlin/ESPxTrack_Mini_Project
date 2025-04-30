@@ -1,247 +1,105 @@
-/* main.css */
-html, body, #app {
+/* Basic layout */
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Left Sidebar */
-.sidebar-left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 100%;
-  background: #2c3e50;
-  color: white;
-  padding: 20px 10px;
-  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
 }
 
-.sidebar-left h2 {
-  margin-bottom: 20px;
-  font-size: 18px;
+#map {
+  width: 100%;
+  height: 100vh;
 }
 
-.sidebar-left button {
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #34495e;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: left;
-}
-
-.sidebar-left button:hover {
-  background: #3d5a73;
-}
-
-/* Right Sidebar */
-.sidebar-right {
+/* Sidebar styling */
+.sidebar-left, .sidebar-right {
   position: absolute;
   top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sidebar-left {
+  left: 0;
+  width: 250px;
+}
+
+.sidebar-right {
   right: 0;
-  width: 200px;
-  height: 100%;
-  background: #ecf0f1;
-  padding: 20px 10px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  z-index: 1000;
+  width: 250px;
+  display: none;
 }
 
-#toggleBusList {
-  width: 100%;
+.sidebar-left button, .sidebar-right button {
+  background-color: #333;
+  color: white;
   padding: 10px;
-  background: #3498db;
+  width: 100%;
   border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-#toggleBusList:hover {
-  background: #2980b9;
-}
-
-#busList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: calc(100% - 50px);
-  overflow-y: auto;
-}
-
-#busList li {
-  padding: 8px;
-  border-bottom: 1px solid #bdc3c7;
+  margin: 10px 0;
   cursor: pointer;
 }
 
-#busList li:hover {
-  background: #dfe6e9;
+.sidebar-left button:hover, .sidebar-right button:hover {
+  background-color: #555;
 }
 
-#busList li.selected {
-  background: #3498db;
+/* Center Panel */
+.center-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.center-panel input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.center-panel button {
+  background-color: #333;
   color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.center-panel button:hover {
+  background-color: #555;
+}
+
+.panel {
+  position: absolute;
+  background-color: #fff;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 400px;
+  display: none;
 }
 
 .hidden {
   display: none;
 }
 
-/* Center Search Panel */
-.center-panel {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  width: 300px;
-  z-index: 1100;
-}
-
-.center-panel input {
-  width: calc(100% - 20px);
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.center-panel button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  background: #27ae60;
-  color: white;
-  cursor: pointer;
-}
-
-.center-panel button:hover {
-  background: #1e8449;
-}
-
-#busDetails {
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-/* Map fills space between sidebars */
-#map {
-  position: absolute;
-  top: 0;
-  left: 200px;
-  right: 200px;
-  bottom: 0;
-  z-index: 0;
-}
-
-/* Feature Panel Styling */
-.panel {
-  position: absolute;
-  top: 60px;
-  left: 220px;
-  width: 260px;
-  background: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  overflow: hidden;
-  z-index: 1100;
-  animation: fadeIn 0.3s ease-in-out;
-  font-size: 14px;
-}
-
-.panel.hidden {
-  display: none;
-}
-
-.panel .panel-header {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 12px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  position: relative;
-}
-
-.panel .closeBtn {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  color: #ecf0f1;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.panel .closeBtn:hover {
-  color: #e74c3c;
-}
-
-.panel label {
-  display: block;
-  margin: 12px 16px 6px 16px;
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.panel select,
-.panel button {
-  width: calc(100% - 32px);
-  margin: 5px 16px 12px 16px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-.panel button {
-  background: #3498db;
-  color: #fff;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.panel button:hover {
-  background: #2980b9;
-}
-
-#featureResult {
-  padding: 0 16px 16px 16px;
-  color: #2c3e50;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Leaflet Custom Bus Markers */
-.leaflet-marker-icon.bus-marker {
-  border-radius: 4px;
-  width: 30px;
-  height: 30px;
-  background-size: cover;
-  background-position: center;
-}
-
-/* Selected Bus Marker - Highlighted with glow */
-.leaflet-marker-icon.bus-marker.selected-bus {
-  box-shadow: 0 0 10px 4px #f39c12;
-  transform: scale(1.2);
-  z-index: 999;
+/* Selected Bus Marker */
+.selected-bus {
+  border: 2px solid yellow;
 }
