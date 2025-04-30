@@ -1,6 +1,11 @@
 import { auth, db } from './firebase.js';
-import { collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
-import { signOut } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
+import {
+  collection,
+  onSnapshot
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js';
+import {
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js';
 
 let map;
 let currentMarkers = {};
@@ -30,25 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initMap() {
   map = L.map('map').setView([13.04, 80.23], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // St. Joseph's marker with popup open on load
-  const stIcon = L.divIcon({
-    className: 'st-marker',
-    html: `<div style="background:#2c3e50; color:#ecf0f1; padding:8px 12px; border-radius:4px; font-weight:bold;">St. Joseph's Group of Colleges</div>`,
-    iconSize: [160, 30],
-    iconAnchor: [80, 15]
-  });
-  L.marker([12.86944, 80.21583], { icon: stIcon })
+  // Destination marker: St. Joseph's Institute of Technology
+  L.marker([12.86944, 80.21583])
     .addTo(map)
-    .bindPopup("St. Joseph's Group of Colleges")
-    .openPopup();
+    .bindPopup("St. Joseph’s Institute of Technology");
 }
 
 function setupAuth() {
-  document.getElementById('logoutBtn').addEventListener('click', () =>
+  document.getElementById('btnLogout').addEventListener('click', () =>
     signOut(auth).then(() => window.location.href = 'index.html')
   );
 }
@@ -60,7 +58,7 @@ function loadBusData() {
     snap.forEach((doc, i) => {
       const d = doc.data();
       if (d.id && d.latitude && d.longitude) {
-        busData[d.id] = {
+        busData[d.id] = { 
           ...d,
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
@@ -76,33 +74,32 @@ function loadBusData() {
 }
 
 function drawMarkers() {
-  // Remove existing markers
+  // Clear old
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
-  // Add new markers
-  Object.values(busData).forEach(bus => {
-    const idNum = bus.id.replace(/\D/g, '');
+  Object.values(busData).forEach((bus, idx) => {
+    // sanitize ID to numeric part
+    const idNum = bus.id.toString().replace(/\D/g, '');
+    const color = bus.color;
     const icon = L.divIcon({
       className: 'bus-marker',
-      html: `<div style="background:${bus.color}; width:24px; height:24px; border-radius:50%; border:2px solid white;"></div>`,
+      html: <div style="background:${color}; width:20px;height:20px; border-radius:50%; border:2px solid white;"></div>,
       iconSize: [24, 24]
     });
 
     const marker = L.marker([bus.latitude, bus.longitude], { icon })
       .addTo(map)
-      .bindPopup(`<strong>Bus No ${idNum}</strong><br>${bus.routeName}`);
+      .bindPopup(<strong>Bus No${idNum}</strong><br>${bus.routeName});
 
     currentMarkers[bus.id] = marker;
   });
 }
 
 function setupUI() {
-  // Feature buttons
+  // Left sidebar feature buttons
   Object.keys(featureLabels).forEach(btnId => {
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    btn.addEventListener('click', () => {
+    document.getElementById(btnId).addEventListener('click', () => {
       currentFeature = featureLabels[btnId];
       document.getElementById('featureTitle').textContent = currentFeature;
       document.getElementById('featureResult').innerHTML = '';
@@ -112,19 +109,19 @@ function setupUI() {
 
   // Close feature panel
   document.querySelector('#featurePanel .closeBtn')
-    .addEventListener('click', () => {
-      document.getElementById('featurePanel').classList.add('hidden');
-    });
+    .addEventListener('click', () =>
+      document.getElementById('featurePanel').classList.add('hidden')
+    );
 
-  // Execute feature data
+  // Load feature data button
   document.getElementById('loadFeatureData')
     .addEventListener('click', showFeatureData);
 
-  // Toggle bus list
+  // Right sidebar: toggle bus list
   document.getElementById('toggleBusList')
-    .addEventListener('click', () => {
-      document.getElementById('busList').classList.toggle('hidden');
-    });
+    .addEventListener('click', () =>
+      document.getElementById('busList').classList.toggle('hidden')
+    );
 }
 
 function populateBusList() {
@@ -132,8 +129,8 @@ function populateBusList() {
   ul.innerHTML = '';
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
-    const idNum = bus.id.replace(/\D/g, '');
-    li.textContent = `Bus No ${idNum}`;
+    const idNum = bus.id.toString().replace(/\D/g, '');
+    li.textContent = Bus No${idNum};
     li.addEventListener('click', () => zoomToBus(bus.id));
     ul.appendChild(li);
   });
@@ -144,8 +141,9 @@ function populateBusSelects() {
     sel.innerHTML = '<option value="">Select Bus…</option>';
     Object.values(busData).forEach(bus => {
       const o = document.createElement('option');
+      const idNum = bus.id.toString().replace(/\D/g, '');
       o.value = bus.id;
-      o.text = `Bus No ${bus.id.replace(/\D/g, '')}`;
+      o.text = Bus No${idNum};
       sel.appendChild(o);
     });
   });
@@ -156,6 +154,25 @@ function zoomToBus(busId) {
   if (!marker) return;
   map.setView(marker.getLatLng(), 15, { animate: true });
   marker.openPopup();
+  showBusDetails(busId);
+}
+
+function showBusDetails(busId) {
+  const b = busData[busId];
+  const panel = document.getElementById('busDetailsPanel');
+  panel.classList.remove('hidden');
+
+  const idNum = b.id.toString().replace(/\D/g, '');
+  document.getElementById('detailTitle').textContent = Bus No${idNum};
+  document.getElementById('detailContent').innerHTML = `
+    <p><strong>Route:</strong> ${b.routeName}</p>
+    <p><strong>From:</strong> ${b.start}</p>
+    <p><strong>To:</strong> ${b.end}</p>
+    <p><strong>Fuel:</strong> ${b.fuel}%</p>
+    <p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>
+    <p><strong>Battery:</strong> ${b.battery}</p>
+    <p><strong>Engine:</strong> ${b.engine}</p>
+  `;
 }
 
 function showFeatureData() {
@@ -169,26 +186,31 @@ function showFeatureData() {
   let html = '';
   switch (currentFeature) {
     case 'Real-Time Status':
-      html = `<p><strong>Latitude:</strong> ${b.latitude}<br><strong>Longitude:</strong> ${b.longitude}</p>`;
+      html = `<p><strong>Latitude:</strong> ${b.latitude}<br>
+              <strong>Longitude:</strong> ${b.longitude}</p>`;
       break;
     case 'Route Summary':
-      html = `<p><strong>Route:</strong> ${b.routeName}<br><strong>From:</strong> ${b.start}<br><strong>To:</strong> ${b.end}</p>`;
+      html = `<p><strong>Route:</strong> ${b.routeName}<br>
+              <strong>From:</strong> ${b.start}<br>
+              <strong>To:</strong> ${b.end}</p>`;
       break;
     case 'Performance Metrics':
-      html = `<p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br><strong>Fuel:</strong> ${b.fuel}%</p>`;
+      html = `<p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
+              <strong>Fuel:</strong> ${b.fuel}%</p>`;
       break;
     case 'Occupancy Insights':
-      html = `<p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>`;
+      html = <p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>;
       break;
     case 'Diagnostic Panel':
-      html = `<p><strong>Battery:</strong> ${b.battery}<br><strong>Engine:</strong> ${b.engine}</p>`;
+      html = `<p><strong>Battery:</strong> ${b.battery}<br>
+              <strong>Engine:</strong> ${b.engine}</p>`;
       break;
     case 'Geofencing':
       const inZone = (
         b.latitude >= 12.85 && b.latitude <= 13.1 &&
         b.longitude >= 80.1 && b.longitude <= 80.3
       );
-      html = `<p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>`;
+      html = <p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>;
       break;
   }
   out.innerHTML = html;
