@@ -84,13 +84,13 @@ function drawMarkers() {
     const color = bus.color;
     const icon = L.divIcon({
       className: 'bus-marker',
-      html: <div style="background:${color}; width:20px;height:20px; border-radius:50%; border:2px solid white;"></div>,
+      html: `<div style="background:${color}; width:20px;height:20px; border-radius:50%; border:2px solid white;"></div>`,
       iconSize: [24, 24]
     });
 
     const marker = L.marker([bus.latitude, bus.longitude], { icon })
       .addTo(map)
-      .bindPopup(<strong>Bus No${idNum}</strong><br>${bus.routeName});
+      .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
 
     currentMarkers[bus.id] = marker;
   });
@@ -130,7 +130,7 @@ function populateBusList() {
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
     const idNum = bus.id.toString().replace(/\D/g, '');
-    li.textContent = Bus No${idNum};
+    li.textContent = `Bus No${idNum}`;
     li.addEventListener('click', () => zoomToBus(bus.id));
     ul.appendChild(li);
   });
@@ -143,7 +143,7 @@ function populateBusSelects() {
       const o = document.createElement('option');
       const idNum = bus.id.toString().replace(/\D/g, '');
       o.value = bus.id;
-      o.text = Bus No${idNum};
+      o.text = `Bus No${idNum}`;
       sel.appendChild(o);
     });
   });
@@ -163,7 +163,7 @@ function showBusDetails(busId) {
   panel.classList.remove('hidden');
 
   const idNum = b.id.toString().replace(/\D/g, '');
-  document.getElementById('detailTitle').textContent = Bus No${idNum};
+  document.getElementById('detailTitle').textContent = `Bus No${idNum}`;
   document.getElementById('detailContent').innerHTML = `
     <p><strong>Route:</strong> ${b.routeName}</p>
     <p><strong>From:</strong> ${b.start}</p>
@@ -199,7 +199,7 @@ function showFeatureData() {
               <strong>Fuel:</strong> ${b.fuel}%</p>`;
       break;
     case 'Occupancy Insights':
-      html = <p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>;
+      html = `<p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>`;
       break;
     case 'Diagnostic Panel':
       html = `<p><strong>Battery:</strong> ${b.battery}<br>
@@ -210,7 +210,7 @@ function showFeatureData() {
         b.latitude >= 12.85 && b.latitude <= 13.1 &&
         b.longitude >= 80.1 && b.longitude <= 80.3
       );
-      html = <p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>;
+      html = `<p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>`;
       break;
   }
   out.innerHTML = html;
