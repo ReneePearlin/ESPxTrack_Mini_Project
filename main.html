@@ -2,56 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fleet Tracker Dashboard</title>
+  <title>Fleet Tracker - Dashboard</title>
   <link rel="stylesheet" href="main.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script type="module" src="main.js" defer></script>
 </head>
 <body>
-  <div id="app">
-    <!-- Left Sidebar -->
-    <aside class="sidebar-left">
-      <h2>Fleet Panel</h2>
-      <button id="btnRealTimeStatus">Real-Time Status</button>
-      <button id="btnRouteSummary">Route Summary</button>
-      <button id="btnPerformanceMetrics">Performance Metrics</button>
-      <button id="btnOccupancyInsights">Occupancy Insights</button>
-      <button id="btnDiagnosticPanel">Diagnostic Panel</button>
-      <button id="btnGeofencing">Geofencing</button>
-      <button id="btnLogout">Logout</button>
-    </aside>
-
-    <!-- Map -->
-    <div id="map"></div>
-
-    <!-- Right Sidebar -->
-    <aside class="sidebar-right">
-      <button id="toggleBusList">Bus List ▾</button>
-      <ul id="busList" class="hidden"></ul>
-    </aside>
-
-    <!-- Feature Panel (reused for all sidebar buttons) -->
-    <div id="featurePanel" class="panel hidden">
-  <div class="panel-header">
-    <span id="featureTitle">Feature Title</span>
-    <button class="closeBtn">&times;</button>
+  <!-- Left Sidebar -->
+  <div class="sidebar-left">
+    <h2>Fleet Panel</h2>
+    <button data-panel="realTime">Real-Time Status</button>
+    <button data-panel="routeSummary">Route Summary</button>
+    <button data-panel="performance">Performance Metrics</button>
+    <button data-panel="occupancy">Occupancy Insights</button>
+    <button data-panel="diagnostics">Diagnostic Panel</button>
+    <button data-panel="geofencing">Geofencing</button>
+    <button id="logoutBtn">Logout</button>
   </div>
-  <label for="featureBusSelect">Choose Bus:</label>
-  <select id="featureBusSelect" class="bus-select"></select>
-  <button id="loadFeatureData">Show Data</button>
-  <div id="featureResult"></div>
-</div>
 
-      <label for="featureBusSelect">Select Bus</label>
-      <select id="featureBusSelect" class="bus-select"></select>
+  <!-- Right Sidebar -->
+  <div class="sidebar-right">
+    <button id="toggleBusList">Show/Hide Bus List</button>
+    <ul id="busList"></ul>
+  </div>
 
-      <button id="loadFeatureData">Show Info</button>
-      <div id="featureResult"></div>
+  <!-- Center Search Panel -->
+  <div class="center-panel">
+    <input type="text" id="busSearch" placeholder="Enter Bus Number..." />
+    <button id="searchBusBtn">Search</button>
+    <div id="busDetails"></div>
+  </div>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Feature Panel (appears when a button is clicked) -->
+  <div class="panel hidden" id="featurePanel">
+    <div class="panel-header">
+      <span id="panelTitle">Panel</span>
+      <button class="closeBtn">&times;</button>
     </div>
+    <label for="busSelect">Select Bus</label>
+    <select id="busSelect"></select>
+    <button id="executeFeatureBtn">Execute</button>
+    <div id="featureResult"></div>
   </div>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="main.js"></script>
 </body>
 </html>
