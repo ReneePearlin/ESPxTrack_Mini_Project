@@ -84,7 +84,7 @@ function loadBusData() {
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
           capacity: d.capacity ?? 'N/A',
-          speed: d.speed ?? 'N/A',
+          speed: d.speed.toFixed(2) ?? 'N/A',
           battery: d.battery ?? 'N/A',
           engine: d.engine ?? 'N/A',
           color: BUS_COLORS[i % BUS_COLORS.length]
@@ -251,7 +251,7 @@ function showBusDetails(busId) {
     </div>
     <div class="bus-detail-row">
       <span class="detail-label">Speed:</span>
-      <span class="detail-value">${b.speed} km/h</span>
+      <span class="detail-value">${b.speed.toFixed(2)} km/h</span>
     </div>
     <div class="bus-detail-row">
       <span class="detail-label">Fuel:</span>
