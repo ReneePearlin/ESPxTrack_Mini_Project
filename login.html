@@ -1,27 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="firebase.js"></script>
+  <meta charset="UTF-8" />
+  <title>Fleet Tracker - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="app.js" defer></script>
 </head>
 <body>
-  <div class="auth-container">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+  <div class="container">
+    <div class="animation">
+      <lottie-player 
+        src="https://assets10.lottiefiles.com/packages/lf20_ktwnwv5m.json" 
+        background="transparent"  
+        speed="1"  
+        style="width: 300px; height: 300px;"  
+        loop  
+        autoplay>
+      </lottie-player>
+    </div>
+
+    <div class="auth-container glass">
+      <h2>Welcome to Fleet Tracker</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+
+      <div class="auth-buttons">
+        <button id="loginBtn">Login</button>
+        <button id="signupBtn">Sign Up</button>
+        <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
+      </div>
+
+      <p id="status"></p>
+    </div>
   </div>
-  <script>
-    function login() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => location.href = 'main.html')
-        .catch(err => alert(err.message));
-    }
-  </script>
+
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 </html>
