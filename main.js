@@ -26,6 +26,18 @@ const featureLabels = {
   btnGeofencing: 'Geofencing'
 };
 
+// Custom bus icons (replace with your hosted images)
+const BUS_ICONS = [
+  'https://cdn-icons-png.flaticon.com/512/2776/2776067.png', // red bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776068.png', // blue bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776069.png', // green bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776070.png', // yellow bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776071.png', // purple bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776072.png', // orange bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776073.png', // pink bus
+  'https://cdn-icons-png.flaticon.com/512/2776/2776074.png'  // gray bus
+];
+
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
   setupAuth();
@@ -36,13 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function initMap() {
   map = L.map('map').setView([13.04, 80.23], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
   }).addTo(map);
 
-  // Destination marker: St. Joseph's Institute of Technology
-  L.marker([12.86944, 80.21583])
+  // Destination marker with custom icon
+  const destinationIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32]
+  });
+
+  L.marker([12.86944, 80.21583], { icon: destinationIcon })
     .addTo(map)
-    .bindPopup("📍 <strong>St. Joseph’s Group of Colleges</strong>")
+    .bindPopup("📍 <strong>St. Joseph's Group of Colleges</strong>")
     .openPopup();
 }
 
@@ -64,6 +83,9 @@ function loadBusData() {
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
           capacity: d.capacity ?? 'N/A',
+          speed: d.speed ?? 'N/A',
+          battery: d.battery ?? 'N/A',
+          engine: d.engine ?? 'N/A',
           color: BUS_COLORS[i % BUS_COLORS.length]
         };
       }
@@ -79,86 +101,113 @@ function drawMarkers() {
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
-  // Eight remote icon URLs (you can swap these out for any direct-PNG links)
-  const iconUrls = [
-    'https://www.flaticon.com/free-icons/pin',           // red
-    'https://www.flaticon.com/free-icons/location-pointer', //pink
-    'https://www.flaticon.com/free-icons/map-pointer', // sky blue
-    'https://www.flaticon.com/free-icons/location',    // yellow
-    'https://www.flaticon.com/free-icons/pin',         // blue
-    'https://www.flaticon.com/free-icons/maps-and-location',          // green
-    'https://www.flaticon.com/free-icons/pin-point',      // purple
-    'https://www.flaticon.com/free-icons/maps-and-location'       // gray
-  ];
-
   Object.values(busData).forEach((bus, idx) => {
     const idNum = bus.id.toString().replace(/\D/g, '');
+    
     const icon = L.icon({
-      iconUrl: iconUrls[idx % iconUrls.length],
-      iconSize:    [32, 32],    // actual PNG size
-      iconAnchor:  [16, 16],    // center the icon
-      popupAnchor: [0, -16]     // point the popup at the top
+      iconUrl: BUS_ICONS[idx % BUS_ICONS.length],
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
     });
 
     const marker = L.marker(
       [bus.latitude, bus.longitude],
-      { icon }
+      { 
+        icon,
+        rotationAngle: bus.bearing || 0 // Optional: rotate marker if bearing data exists
+      }
     ).addTo(map)
-     .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
+     .bindPopup(`
+       <div class="bus-popup">
+         <strong>Bus No${idNum}</strong><br>
+         <span class="route-name">${bus.routeName}</span><br>
+         <div class="bus-stats">
+           <span>🚌 ${bus.occupancy}/${bus.capacity}</span>
+           <span>⛽ ${bus.fuel}%</span>
+           <span>⚡ ${bus.battery}</span>
+         </div>
+       </div>
+     `);
 
+    // Store reference to marker
     currentMarkers[bus.id] = marker;
+
+    // Add click event to zoom to bus
+    marker.on('click', () => {
+      map.setView(marker.getLatLng(), 15);
+      showBusDetails(bus.id);
+    });
   });
 }
 
-
-
-
-
-
 function setupUI() {
+  // Feature buttons
   Object.keys(featureLabels).forEach(btnId => {
     document.getElementById(btnId).addEventListener('click', () => {
       currentFeature = featureLabels[btnId];
       document.getElementById('featureTitle').textContent = currentFeature;
       document.getElementById('featureResult').innerHTML = '';
       document.getElementById('featurePanel').classList.remove('hidden');
+      
+      // Special setup for certain features
+      if (btnId === 'btnGeofencing') {
+        document.getElementById('geofenceControls').classList.remove('hidden');
+      } else {
+        document.getElementById('geofenceControls').classList.add('hidden');
+      }
     });
   });
 
-  document.querySelector('#featurePanel .closeBtn')
-    .addEventListener('click', () =>
-      document.getElementById('featurePanel').classList.add('hidden')
-    );
+  // Panel controls
+  document.querySelector('#featurePanel .closeBtn').addEventListener('click', () => {
+    document.getElementById('featurePanel').classList.add('hidden');
+  });
 
-  document.getElementById('loadFeatureData')
-    .addEventListener('click', showFeatureData);
+  document.getElementById('loadFeatureData').addEventListener('click', showFeatureData);
 
-  document.getElementById('toggleBusList')
-    .addEventListener('click', () =>
-      document.getElementById('busList').classList.toggle('hidden')
-    );
+  // Toggle bus list
+  document.getElementById('toggleBusList').addEventListener('click', () => {
+    document.getElementById('busList').classList.toggle('hidden');
+  });
+
+  // Close bus details panel
+  document.getElementById('closeBusDetails').addEventListener('click', () => {
+    document.getElementById('busDetailsPanel').classList.add('hidden');
+  });
 }
 
 function populateBusList() {
   const ul = document.getElementById('busList');
   ul.innerHTML = '';
+  
   Object.values(busData).forEach(bus => {
     const li = document.createElement('li');
     const idNum = bus.id.toString().replace(/\D/g, '');
-    li.textContent = `Bus No${idNum}`;
-    li.addEventListener('click', () => zoomToBus(bus.id));
+    
+    li.innerHTML = `
+      <span class="bus-color" style="background-color:${bus.color}"></span>
+      <span class="bus-number">Bus No${idNum}</span>
+      <span class="bus-route">${bus.routeName}</span>
+    `;
+    
+    li.addEventListener('click', () => {
+      zoomToBus(bus.id);
+      document.getElementById('busList').classList.add('hidden');
+    });
+    
     ul.appendChild(li);
   });
 }
 
 function populateBusSelects() {
   document.querySelectorAll('.bus-select').forEach(sel => {
-    sel.innerHTML = '<option value="">Select Bus…</option>';
+    sel.innerHTML = '<option value="">Select Bus...</option>';
     Object.values(busData).forEach(bus => {
       const o = document.createElement('option');
       const idNum = bus.id.toString().replace(/\D/g, '');
       o.value = bus.id;
-      o.text = `Bus No${idNum}`;
+      o.text = `Bus No${idNum} (${bus.routeName})`;
       sel.appendChild(o);
     });
   });
@@ -167,66 +216,224 @@ function populateBusSelects() {
 function zoomToBus(busId) {
   const marker = currentMarkers[busId];
   if (!marker) return;
-  map.setView(marker.getLatLng(), 15, { animate: true });
+  
+  map.setView(marker.getLatLng(), 15, { 
+    animate: true,
+    duration: 1
+  });
+  
   marker.openPopup();
   showBusDetails(busId);
 }
 
 function showBusDetails(busId) {
   const b = busData[busId];
+  if (!b) return;
+
   const panel = document.getElementById('busDetailsPanel');
   panel.classList.remove('hidden');
 
   const idNum = b.id.toString().replace(/\D/g, '');
   document.getElementById('detailTitle').textContent = `Bus No${idNum}`;
   document.getElementById('detailContent').innerHTML = `
-    <p><strong>Route:</strong> ${b.routeName}</p>
-    <p><strong>From:</strong> ${b.start}</p>
-    <p><strong>To:</strong> ${b.end}</p>
-    <p><strong>Fuel:</strong> ${b.fuel}%</p>
-    <p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>
-    <p><strong>Battery:</strong> ${b.battery}</p>
-    <p><strong>Engine:</strong> ${b.engine}</p>
+    <div class="bus-detail-row">
+      <span class="detail-label">Route:</span>
+      <span class="detail-value">${b.routeName}</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">From:</span>
+      <span class="detail-value">${b.start}</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">To:</span>
+      <span class="detail-value">${b.end}</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">Speed:</span>
+      <span class="detail-value">${b.speed} km/h</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">Fuel:</span>
+      <span class="detail-value">${b.fuel}%</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">Occupancy:</span>
+      <span class="detail-value">${b.occupancy}/${b.capacity}</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">Battery:</span>
+      <span class="detail-value">${b.battery}</span>
+    </div>
+    <div class="bus-detail-row">
+      <span class="detail-label">Engine:</span>
+      <span class="detail-value">${b.engine}</span>
+    </div>
   `;
 }
 
 function showFeatureData() {
   const busId = document.getElementById('featureBusSelect').value;
   const out = document.getElementById('featureResult');
+  
   if (!busId || !busData[busId]) {
-    out.innerHTML = '<p style="color:red;">Please select a valid bus.</p>';
+    out.innerHTML = '<div class="error-message">Please select a valid bus.</div>';
     return;
   }
+  
   const b = busData[busId];
+  const idNum = b.id.toString().replace(/\D/g, '');
   let html = '';
+  
   switch (currentFeature) {
     case 'Real-Time Status':
-      html = `<p><strong>Latitude:</strong> ${b.latitude}<br>
-              <strong>Longitude:</strong> ${b.longitude}</p>`;
+      html = `
+        <div class="feature-data">
+          <h3>Bus No${idNum} Location</h3>
+          <div class="data-row">
+            <span>Latitude:</span>
+            <span class="data-value">${b.latitude}</span>
+          </div>
+          <div class="data-row">
+            <span>Longitude:</span>
+            <span class="data-value">${b.longitude}</span>
+          </div>
+          <button class="btn zoom-btn" onclick="zoomToBus('${busId}')">Zoom to Bus</button>
+        </div>
+      `;
       break;
+      
     case 'Route Summary':
-      html = `<p><strong>Route:</strong> ${b.routeName}<br>
-              <strong>From:</strong> ${b.start}<br>
-              <strong>To:</strong> ${b.end}</p>`;
+      html = `
+        <div class="feature-data">
+          <h3>Bus No${idNum} Route</h3>
+          <div class="route-map">
+            <div class="route-stop">
+              <span class="stop-marker">🟢</span>
+              <span class="stop-name">${b.start}</span>
+            </div>
+            <div class="route-line"></div>
+            <div class="route-stop">
+              <span class="stop-marker">🔴</span>
+              <span class="stop-name">${b.end}</span>
+            </div>
+          </div>
+          <div class="route-distance">
+            <span>Route Distance:</span>
+            <span class="data-value">${b.distance || 'N/A'} km</span>
+          </div>
+        </div>
+      `;
       break;
+      
     case 'Performance Metrics':
-      html = `<p><strong>Speed:</strong> ${b.speed ?? 'N/A'} km/h<br>
-              <strong>Fuel:</strong> ${b.fuel}%</p>`;
+      html = `
+        <div class="feature-data">
+          <h3>Performance Metrics</h3>
+          <div class="metric-gauge">
+            <div class="gauge-speed" style="--value:${Math.min(b.speed || 0, 100)}">
+              <span>Speed</span>
+              <span class="gauge-value">${b.speed} km/h</span>
+            </div>
+          </div>
+          <div class="metric-gauge">
+            <div class="gauge-fuel" style="--value:${b.fuel}">
+              <span>Fuel</span>
+              <span class="gauge-value">${b.fuel}%</span>
+            </div>
+          </div>
+        </div>
+      `;
       break;
+      
     case 'Occupancy Insights':
-      html = `<p><strong>Occupancy:</strong> ${b.occupancy}/${b.capacity}</p>`;
+      const occupancyPercent = Math.round((b.occupancy / b.capacity) * 100);
+      html = `
+        <div class="feature-data">
+          <h3>Occupancy Status</h3>
+          <div class="occupancy-meter">
+            <div class="meter-fill" style="width:${occupancyPercent}%"></div>
+            <span class="meter-text">${b.occupancy}/${b.capacity} (${occupancyPercent}%)</span>
+          </div>
+          <div class="occupancy-trend">
+            <span>Trend: ${getOccupancyTrend(b.occupancy)}</span>
+          </div>
+        </div>
+      `;
       break;
+      
     case 'Diagnostic Panel':
-      html = `<p><strong>Battery:</strong> ${b.battery}<br>
-              <strong>Engine:</strong> ${b.engine}</p>`;
+      html = `
+        <div class="feature-data">
+          <h3>Diagnostic Status</h3>
+          <div class="diagnostic-item ${b.battery === 'Good' ? 'good' : 'warning'}">
+            <span>Battery:</span>
+            <span>${b.battery}</span>
+          </div>
+          <div class="diagnostic-item ${b.engine === 'Normal' ? 'good' : 'warning'}">
+            <span>Engine:</span>
+            <span>${b.engine}</span>
+          </div>
+          <div class="diagnostic-item">
+            <span>Last Maintenance:</span>
+            <span>${b.lastMaintenance || 'N/A'}</span>
+          </div>
+        </div>
+      `;
       break;
+      
     case 'Geofencing':
       const inZone = (
         b.latitude >= 12.85 && b.latitude <= 13.1 &&
         b.longitude >= 80.1 && b.longitude <= 80.3
       );
-      html = `<p>Status: <strong>${inZone ? 'Inside' : 'Outside'}</strong> Zone</p>`;
+      html = `
+        <div class="feature-data">
+          <h3>Geofence Status</h3>
+          <div class="geofence-status ${inZone ? 'in-zone' : 'out-zone'}">
+            <span>${inZone ? '✅ Inside' : '❌ Outside'} Operational Zone</span>
+          </div>
+          <div class="geofence-map">
+            <button class="btn" onclick="showGeofenceOnMap()">Show Zone on Map</button>
+          </div>
+        </div>
+      `;
       break;
   }
+  
   out.innerHTML = html;
 }
+
+// Helper function for occupancy trend
+function getOccupancyTrend(current) {
+  // This would normally compare with previous data
+  const rand = Math.random();
+  if (rand > 0.6) return 'Increasing';
+  if (rand > 0.3) return 'Steady';
+  return 'Decreasing';
+}
+
+// Show geofence area on map
+window.showGeofenceOnMap = function() {
+  const bounds = [
+    [12.85, 80.1], // SW
+    [13.1, 80.3]   // NE
+  ];
+  
+  // Remove existing geofence if any
+  map.eachLayer(layer => {
+    if (layer.options && layer.options.className === 'geofence-layer') {
+      map.removeLayer(layer);
+    }
+  });
+  
+  // Add new geofence rectangle
+  L.rectangle(bounds, {
+    className: 'geofence-layer',
+    color: '#ff7800',
+    weight: 2,
+    fillOpacity: 0.1
+  }).addTo(map);
+  
+  // Zoom to show the geofence area
+  map.fitBounds(bounds);
+};
