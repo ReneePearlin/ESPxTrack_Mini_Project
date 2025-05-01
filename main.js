@@ -333,7 +333,7 @@ function showFeatureData() {
           <div class="metric-gauge">
             <div class="gauge-speed" style="--value:${Math.min(b.speed || 0, 100).toFixed(2)}">
               <span>Speed</span>
-              <span class="gauge-value">${b.speed} km/h</span>
+              <span class="gauge-value">${b.speed.toFixed(2)} km/h</span>
             </div>
           </div>
           <div class="metric-gauge">
