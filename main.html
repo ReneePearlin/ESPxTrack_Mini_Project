@@ -1,198 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker Dashboard</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-  <div class="dashboard-container">
-    <!-- Top Navigation Bar -->
-    <header class="top-nav">
-      <div class="logo">
-        <i class="fas fa-bus"></i>
-        <span>FleetTrack Pro</span>
-      </div>
-      <div class="nav-controls">
-        <button id="refreshBtn" class="nav-btn">
-          <i class="fas fa-sync-alt"></i>
-        </button>
-        <div class="user-profile">
-          <span id="username">Admin User</span>
-          <button id="btnLogout" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
-        </div>
-      </div>
-    </header>
+  <div id="app">
+    <!-- Left Sidebar - Navigation -->
+    <aside class="sidebar sidebar-left">
+      <h2>Fleet Panel</h2>
+      <button id="btnRealTimeStatus" class="btn btn-feature">Real-Time Status</button>
+      <button id="btnRouteSummary" class="btn btn-feature">Route Summary</button>
+      <button id="btnPerformanceMetrics" class="btn btn-feature">Performance Metrics</button>
+      <button id="btnOccupancyInsights" class="btn btn-feature">Occupancy Insights</button>
+      <button id="btnDiagnosticPanel" class="btn btn-feature">Diagnostic Panel</button>
+      <button id="btnGeofencing" class="btn btn-feature">Geofencing</button>
+      <button id="btnLogout" class="btn btn-danger">Logout</button>
+    </aside>
 
-    <!-- Main Content Area -->
-    <div class="main-content">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar-menu">
-          <button id="btnRealTimeStatus" class="menu-btn active">
-            <i class="fas fa-map-marker-alt"></i>
-            <span>Live Tracking</span>
-          </button>
-          <button id="btnRouteSummary" class="menu-btn">
-            <i class="fas fa-route"></i>
-            <span>Routes</span>
-          </button>
-          <button id="btnPerformanceMetrics" class="menu-btn">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Performance</span>
-          </button>
-          <button id="btnOccupancyInsights" class="menu-btn">
-            <i class="fas fa-users"></i>
-            <span>Occupancy</span>
-          </button>
-          <button id="btnDiagnosticPanel" class="menu-btn">
-            <i class="fas fa-wrench"></i>
-            <span>Diagnostics</span>
-          </button>
-          <button id="btnGeofencing" class="menu-btn">
-            <i class="fas fa-map-marked-alt"></i>
-            <span>Geofencing</span>
-          </button>
-          <button id="btnReports" class="menu-btn">
-            <i class="fas fa-chart-bar"></i>
-            <span>Reports</span>
-          </button>
-        </div>
-      </aside>
+    <!-- Main Map Area -->
+    <div id="map"></div>
 
-      <!-- Map Section -->
-      <div class="map-container">
-        <div id="map"></div>
-        
-        <!-- Map Controls -->
-        <div class="map-controls">
-          <button id="zoomInBtn" class="control-btn">
-            <i class="fas fa-plus"></i>
-          </button>
-          <button id="zoomOutBtn" class="control-btn">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button id="locateBtn" class="control-btn">
-            <i class="fas fa-location-arrow"></i>
-          </button>
-        </div>
-      </div>
+    <!-- Right Sidebar - Bus List -->
+    <aside class="sidebar sidebar-right">
+      <button id="toggleBusList" class="btn btn-primary">Bus List ▾</button>
+      <ul id="busList" class="hidden"></ul>
+    </aside>
 
-      <!-- Right Panel -->
-      <div class="right-panel">
-        <div class="panel-header">
-          <h3>Bus Fleet</h3>
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search buses...">
-          </div>
-        </div>
-        
-        <div class="bus-list-container">
-          <div class="bus-list-header">
-            <span>Bus ID</span>
-            <span>Status</span>
-            <span>Route</span>
-          </div>
-          <div id="busList" class="bus-list">
-            <!-- Bus items will be dynamically inserted here -->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Floating Panels -->
-    <div id="featurePanel" class="floating-panel hidden">
+    <!-- Feature Panel (hidden by default) -->
+    <div id="featurePanel" class="panel hidden">
       <div class="panel-header">
-        <h3 id="featureTitle">Feature Panel</h3>
-        <button class="close-btn" id="closeFeaturePanel">
-          <i class="fas fa-times"></i>
-        </button>
+        <span id="featureTitle">Feature Title</span>
+        <button class="closeBtn">&times;</button>
       </div>
       <div class="panel-content">
-        <div class="form-group">
-          <label for="featureBusSelect">Select Bus</label>
-          <select id="featureBusSelect" class="form-control">
-            <option value="">-- Select a bus --</option>
-          </select>
+        <label for="featureBusSelect">Select Bus:</label>
+        <select id="featureBusSelect" class="bus-select"></select>
+        <div id="geofenceControls" class="hidden">
+          <!-- Geofencing specific controls can go here -->
         </div>
-        <div id="featureResult" class="feature-result"></div>
-        <button id="loadFeatureData" class="action-btn">
-          <i class="fas fa-chart-line"></i> Generate Report
-        </button>
+        <button id="loadFeatureData" class="btn btn-primary">Show Data</button>
+        <div id="featureResult"></div>
       </div>
     </div>
 
-    <!-- Bus Details Panel -->
-    <div id="busDetailsPanel" class="floating-panel hidden">
+    <!-- Bus Details Panel (hidden by default) -->
+    <div id="busDetailsPanel" class="panel hidden">
       <div class="panel-header">
-        <h3 id="detailTitle">Bus Details</h3>
-        <button class="close-btn" id="closeBusDetails">
-          <i class="fas fa-times"></i>
-        </button>
+        <span id="detailTitle">Bus Details</span>
+        <button id="closeBusDetails" class="closeBtn">&times;</button>
       </div>
       <div class="panel-content">
-        <div class="bus-details-grid">
-          <div class="detail-item">
-            <span class="detail-label">Bus ID:</span>
-            <span class="detail-value" id="detail-id">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Route:</span>
-            <span class="detail-value" id="detail-route">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Status:</span>
-            <span class="detail-value" id="detail-status">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Speed:</span>
-            <span class="detail-value" id="detail-speed">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Occupancy:</span>
-            <span class="detail-value" id="detail-occupancy">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Fuel:</span>
-            <span class="detail-value" id="detail-fuel">--</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Last Update:</span>
-            <span class="detail-value" id="detail-update">--</span>
-          </div>
-        </div>
-        <div class="action-buttons">
-          <button class="action-btn secondary">
-            <i class="fas fa-history"></i> History
-          </button>
-          <button class="action-btn">
-            <i class="fas fa-bell"></i> Alerts
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="notificationToast" class="toast hidden">
-      <div class="toast-icon">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      <div class="toast-content">
-        <p id="toastMessage">Operation completed successfully</p>
+        <div id="detailContent"></div>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- JavaScript Libraries -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="js/firebase.js"></script>
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
