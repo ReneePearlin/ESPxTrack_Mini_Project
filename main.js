@@ -81,14 +81,14 @@ function drawMarkers() {
 
   // Eight remote icon URLs (you can swap these out for any direct-PNG links)
   const iconUrls = [
-    'https://www.flaticon.com/free-icons/bus',           // red
-    'https://www.flaticon.com/free-icons/bus',       // blue
-    'https://img.icons8.com/color/32/bus-side-view.png', // green
-    'https://img.icons8.com/color/32/school-bus.png',    // yellow
-    'https://img.icons8.com/fluency/32/bus.png',         // purple
-    'https://img.icons8.com/office/32/bus.png',          // orange
-    'https://img.icons8.com/plasticine/32/bus.png',      // teal
-    'https://img.icons8.com/ios-filled/32/bus.png'       // gray
+    'https://www.flaticon.com/free-icons/pin',           // red
+    'https://www.flaticon.com/free-icons/location-pointer', //pink
+    'https://www.flaticon.com/free-icons/map-pointer', // sky blue
+    'https://www.flaticon.com/free-icons/location',    // yellow
+    'https://www.flaticon.com/free-icons/pin',         // blue
+    'https://www.flaticon.com/free-icons/maps-and-location',          // green
+    'https://www.flaticon.com/free-icons/pin-point',      // purple
+    'https://www.flaticon.com/free-icons/maps-and-location'       // gray
   ];
 
   Object.values(busData).forEach((bus, idx) => {
