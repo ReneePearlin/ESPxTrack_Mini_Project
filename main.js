@@ -36,7 +36,7 @@ const BUS_ICONS = [
 //  'https://cdn-icons-png.flaticon.com/512/2776/2776072.png', // orange bus
 //  'https://cdn-icons-png.flaticon.com/512/2776/2776073.png', // pink bus
 //  'https://cdn-icons-png.flaticon.com/512/2776/2776074.png'  // gray bus
- 'https://cdn-icons-png.flaticon.com/128/6962/6962582.png' // The one and only
+'https://cdn-icons-png.flaticon.com/128/635/635705.png' // The one and only
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -331,7 +331,7 @@ function showFeatureData() {
         <div class="feature-data">
           <h3>Performance Metrics</h3>
           <div class="metric-gauge">
-            <div class="gauge-speed" style="--value:${Math.min(b.speed || 0, 100)}">
+            <div class="gauge-speed" style="--value:${Math.min(b.speed || 0, 100).toFixed(2)}">
               <span>Speed</span>
               <span class="gauge-value">${b.speed} km/h</span>
             </div>
