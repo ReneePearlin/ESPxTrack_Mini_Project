@@ -251,7 +251,7 @@ function showBusDetails(busId) {
     </div>
     <div class="bus-detail-row">
       <span class="detail-label">Speed:</span>
-      <span class="detail-value">${(b.speed).toFixed(2)} km/h</span>
+      <span class="detail-value">${b.speed} km/h</span>
     </div>
     <div class="bus-detail-row">
       <span class="detail-label">Fuel:</span>
