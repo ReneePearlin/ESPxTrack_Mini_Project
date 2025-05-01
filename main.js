@@ -28,14 +28,15 @@ const featureLabels = {
 
 // Custom bus icons (replace with your hosted images)
 const BUS_ICONS = [
-  'https://cdn-icons-png.flaticon.com/512/2776/2776067.png', // red bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776068.png', // blue bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776069.png', // green bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776070.png', // yellow bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776071.png', // purple bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776072.png', // orange bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776073.png', // pink bus
-  'https://cdn-icons-png.flaticon.com/512/2776/2776074.png'  // gray bus
+ // 'https://cdn-icons-png.flaticon.com/512/2776/2776067.png', // red bus
+//  'https://cdn-icons-png.flaticon.com/512/2776/2776068.png', // blue bus
+// 'https://cdn-icons-png.flaticon.com/512/2776/2776069.png', // green bus
+ // 'https://cdn-icons-png.flaticon.com/512/2776/2776070.png', // yellow bus
+//  'https://cdn-icons-png.flaticon.com/512/2776/2776071.png', // purple bus
+//  'https://cdn-icons-png.flaticon.com/512/2776/2776072.png', // orange bus
+//  'https://cdn-icons-png.flaticon.com/512/2776/2776073.png', // pink bus
+//  'https://cdn-icons-png.flaticon.com/512/2776/2776074.png'  // gray bus
+  'https://cdn-icons-png.flaticon.com/128/10534/10534946.png' // The one and only
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
