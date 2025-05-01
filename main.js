@@ -331,17 +331,20 @@ function showFeatureData() {
         <div class="feature-data">
           <h3>Performance Metrics</h3>
           <div class="metric-gauge">
-            <div class="gauge-speed" style="--value:${Math.min(b.speed || 0, 100).toFixed(2)}">
+            <div class="gauge-fill gauge-speed" style="--value:${Math.min(b.speed || 0, 100).toFixed(2)}"></div>
+            <div class="gauge-label">
               <span>Speed</span>
               <span class="gauge-value">${b.speed.toFixed(2)} km/h</span>
             </div>
           </div>
           <div class="metric-gauge">
-            <div class="gauge-fuel" style="--value:${b.fuel}">
+            <div class="gauge-fill gauge-fuel" style="--value:${Math.min(b.fuel || 0, 100).toFixed(2)}"></div>
+            <div class="gauge-label">
               <span>Fuel</span>
-              <span class="gauge-value">${b.fuel}%</span>
+              <span class="gauge-value">${b.fuel.toFixed(2)} km/h</span>
             </div>
           </div>
+           
         </div>
       `;
       break;
