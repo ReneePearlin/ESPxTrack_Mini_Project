@@ -75,33 +75,45 @@ function loadBusData() {
 }
 
 function drawMarkers() {
+  // Clear old markers
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
+  // Eight remote icon URLs (you can swap these out for any direct-PNG links)
+  const iconUrls = [
+    'https://www.flaticon.com/free-icons/bus',           // red
+    'https://www.flaticon.com/free-icons/bus',       // blue
+    'https://img.icons8.com/color/32/bus-side-view.png', // green
+    'https://img.icons8.com/color/32/school-bus.png',    // yellow
+    'https://img.icons8.com/fluency/32/bus.png',         // purple
+    'https://img.icons8.com/office/32/bus.png',          // orange
+    'https://img.icons8.com/plasticine/32/bus.png',      // teal
+    'https://img.icons8.com/ios-filled/32/bus.png'       // gray
+  ];
+
   Object.values(busData).forEach((bus, idx) => {
     const idNum = bus.id.toString().replace(/\D/g, '');
-    const color = bus.color;
-
-    const icon = L.divIcon({
-      className: '', // remove to avoid CSS conflicts
-      html: `<div style="
-        background:${color};
-        width:20px;
-        height:20px;
-        border-radius:50%;
-        border: 2px solid black;
-        box-shadow: 0 0 5px ${color};
-      "></div>`,
-      iconSize: [24, 24]
+    const icon = L.icon({
+      iconUrl: iconUrls[idx % iconUrls.length],
+      iconSize:    [32, 32],    // actual PNG size
+      iconAnchor:  [16, 16],    // center the icon
+      popupAnchor: [0, -16]     // point the popup at the top
     });
 
-    const marker = L.marker([bus.latitude, bus.longitude], { icon })
-      .addTo(map)
-      .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
+    const marker = L.marker(
+      [bus.latitude, bus.longitude],
+      { icon }
+    ).addTo(map)
+     .bindPopup(`<strong>Bus No${idNum}</strong><br>${bus.routeName}`);
 
     currentMarkers[bus.id] = marker;
   });
 }
+
+
+
+
+
 
 function setupUI() {
   Object.keys(featureLabels).forEach(btnId => {
