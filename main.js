@@ -35,14 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initMap() {
   map = L.map('map').setView([13.04, 80.23], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // Destination marker: St. Joseph's Institute of Technology
-  L.marker([12.86944, 80.21583])
+  // St. Joseph's Group of Colleges marker with popup
+  const collegeMarker = L.marker([12.86944, 80.21583])
     .addTo(map)
-    .bindPopup("St. Joseph’s Institute of Technology");
+    .bindPopup("<strong>St. Joseph’s Group of Colleges</strong>")
+    .openPopup();
 }
 
 function setupAuth() {
@@ -79,12 +80,18 @@ function drawMarkers() {
   currentMarkers = {};
 
   Object.values(busData).forEach((bus, idx) => {
-    // sanitize ID to numeric part
     const idNum = bus.id.toString().replace(/\D/g, '');
     const color = bus.color;
     const icon = L.divIcon({
       className: 'bus-marker',
-      html: `<div style="background:${color}; width:20px;height:20px; border-radius:50%; border:2px solid white;"></div>`,
+      html: `<div style="
+        background:${color};
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        border: 2px solid black;
+        box-shadow: 0 0 5px ${color};
+      "></div>`,
       iconSize: [24, 24]
     });
 
