@@ -39,10 +39,10 @@ function initMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // St. Joseph's Group of Colleges marker with popup
-  const collegeMarker = L.marker([12.86944, 80.21583])
+  // Destination marker: St. Joseph's Institute of Technology
+  L.marker([12.86944, 80.21583])
     .addTo(map)
-    .bindPopup("<strong>St. Joseph’s Group of Colleges</strong>")
+    .bindPopup("📍 <strong>St. Joseph’s Group of Colleges</strong>")
     .openPopup();
 }
 
@@ -59,7 +59,7 @@ function loadBusData() {
     snap.forEach((doc, i) => {
       const d = doc.data();
       if (d.id && d.latitude && d.longitude) {
-        busData[d.id] = { 
+        busData[d.id] = {
           ...d,
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
@@ -75,15 +75,15 @@ function loadBusData() {
 }
 
 function drawMarkers() {
-  // Clear old
   Object.values(currentMarkers).forEach(m => map.removeLayer(m));
   currentMarkers = {};
 
   Object.values(busData).forEach((bus, idx) => {
     const idNum = bus.id.toString().replace(/\D/g, '');
     const color = bus.color;
+
     const icon = L.divIcon({
-      className: 'bus-marker',
+      className: '', // remove to avoid CSS conflicts
       html: `<div style="
         background:${color};
         width:20px;
@@ -104,7 +104,6 @@ function drawMarkers() {
 }
 
 function setupUI() {
-  // Left sidebar feature buttons
   Object.keys(featureLabels).forEach(btnId => {
     document.getElementById(btnId).addEventListener('click', () => {
       currentFeature = featureLabels[btnId];
@@ -114,17 +113,14 @@ function setupUI() {
     });
   });
 
-  // Close feature panel
   document.querySelector('#featurePanel .closeBtn')
     .addEventListener('click', () =>
       document.getElementById('featurePanel').classList.add('hidden')
     );
 
-  // Load feature data button
   document.getElementById('loadFeatureData')
     .addEventListener('click', showFeatureData);
 
-  // Right sidebar: toggle bus list
   document.getElementById('toggleBusList')
     .addEventListener('click', () =>
       document.getElementById('busList').classList.toggle('hidden')
