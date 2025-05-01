@@ -254,6 +254,8 @@ html, body, #app {
 }
 
 /* Gauges and Meters */
+
+
 .metric-gauge {
   height: 30px;
   background: #ecf0f1;
@@ -261,34 +263,45 @@ html, body, #app {
   margin: 10px 0;
   overflow: hidden;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-.gauge-speed, .gauge-fuel {
+.gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: calc(var(--value) * 1%);
+  z-index: 0;
   border-radius: 15px;
-  transition: width 0.5s ease;
-  position: relative;
 }
 
 .gauge-speed {
   background: linear-gradient(to right, #2ecc71, #f1c40f);
-  width: calc(var(--value) * 1%);
 }
 
 .gauge-fuel {
   background: linear-gradient(to right, #e74c3c, #f39c12);
-  width: calc(var(--value) * 1%);
+}
+
+.gauge-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .gauge-value {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: white;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
+
 
 .occupancy-meter {
   height: 25px;
