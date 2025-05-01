@@ -84,7 +84,7 @@ function loadBusData() {
           fuel: d.fuel ?? 'N/A',
           occupancy: d.occupancy ?? 'N/A',
           capacity: d.capacity ?? 'N/A',
-          speed: (d.speed).toFixed(2) ?? 'N/A',
+          speed: d.speed ?? 'N/A',
           battery: d.battery ?? 'N/A',
           engine: d.engine ?? 'N/A',
           color: BUS_COLORS[i % BUS_COLORS.length]
