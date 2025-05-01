@@ -5,21 +5,40 @@
   <title>Fleet Tracker - Login</title>
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="app.js" defer></script>
+
+  <!-- DotLottie Player -->
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body>
-  <div class="auth-container">
-    <h2>Welcome to Fleet Tracker</h2>
-
-    <input type="email" id="loginEmail" placeholder="Email" required />
-    <input type="password" id="loginPassword" placeholder="Password" required />
-
-    <div class="auth-buttons">
-      <button id="loginBtn">Login</button>
-      <button id="signupBtn">Sign Up</button>
-      <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
+  <div class="container">
+    
+    <!-- Animated illustration -->
+    <div class="animation">
+      <dotlottie-player
+        src="https://lottie.host/ae2110e6-3650-4b62-ace6-c66f1567884f/ziwgz3NHqw.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px"
+        loop autoplay>
+      </dotlottie-player>
     </div>
 
-    <p id="status"></p>
+    <!-- Login form -->
+    <div class="auth-container">
+      <h2>Welcome to Fleet Tracker</h2>
+
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+
+      <div class="auth-buttons">
+        <button id="loginBtn">Login</button>
+        <button id="signupBtn">Sign Up</button>
+        <button id="googleSignInBtn" class="google-btn">Sign in with Google</button>
+      </div>
+
+      <p id="status"></p>
+    </div>
+    
   </div>
 </body>
-</html>       
+</html>
