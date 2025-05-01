@@ -5,52 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fleet Tracker Dashboard</title>
   <link rel="stylesheet" href="main.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Left Sidebar -->
-    <aside class="sidebar-left">
+    <!-- Left Sidebar - Navigation -->
+    <aside class="sidebar sidebar-left">
       <h2>Fleet Panel</h2>
-      <button id="btnRealTimeStatus">Real-Time Status</button>
-      <button id="btnRouteSummary">Route Summary</button>
-      <button id="btnPerformanceMetrics">Performance Metrics</button>
-      <button id="btnOccupancyInsights">Occupancy Insights</button>
-      <button id="btnDiagnosticPanel">Diagnostic Panel</button>
-      <button id="btnGeofencing">Geofencing</button>
-      <button id="btnLogout">Logout</button>
+      <button id="btnRealTimeStatus" class="btn btn-feature">Real-Time Status</button>
+      <button id="btnRouteSummary" class="btn btn-feature">Route Summary</button>
+      <button id="btnPerformanceMetrics" class="btn btn-feature">Performance Metrics</button>
+      <button id="btnOccupancyInsights" class="btn btn-feature">Occupancy Insights</button>
+      <button id="btnDiagnosticPanel" class="btn btn-feature">Diagnostic Panel</button>
+      <button id="btnGeofencing" class="btn btn-feature">Geofencing</button>
+      <button id="btnLogout" class="btn btn-danger">Logout</button>
     </aside>
 
-    <!-- Map -->
+    <!-- Main Map Area -->
     <div id="map"></div>
 
-    <!-- Right Sidebar -->
-    <aside class="sidebar-right">
-      <button id="toggleBusList">Bus List ▾</button>
+    <!-- Right Sidebar - Bus List -->
+    <aside class="sidebar sidebar-right">
+      <button id="toggleBusList" class="btn btn-primary">Bus List ▾</button>
       <ul id="busList" class="hidden"></ul>
     </aside>
 
-    <!-- Feature Panel (reused for all sidebar buttons) -->
+    <!-- Feature Panel (hidden by default) -->
     <div id="featurePanel" class="panel hidden">
-  <div class="panel-header">
-    <span id="featureTitle">Feature Title</span>
-    <button class="closeBtn">&times;</button>
-  </div>
-  <label for="featureBusSelect">Choose Bus:</label>
-  <select id="featureBusSelect" class="bus-select"></select>
-  <button id="loadFeatureData">Show Data</button>
-  <div id="featureResult"></div>
-</div>
+      <div class="panel-header">
+        <span id="featureTitle">Feature Title</span>
+        <button class="closeBtn">&times;</button>
+      </div>
+      <div class="panel-content">
+        <label for="featureBusSelect">Select Bus:</label>
+        <select id="featureBusSelect" class="bus-select"></select>
+        <div id="geofenceControls" class="hidden">
+          <!-- Geofencing specific controls can go here -->
+        </div>
+        <button id="loadFeatureData" class="btn btn-primary">Show Data</button>
+        <div id="featureResult"></div>
+      </div>
+    </div>
 
-      <label for="featureBusSelect">Select Bus</label>
-      <select id="featureBusSelect" class="bus-select"></select>
-
-      <button id="loadFeatureData">Show Info</button>
-      <div id="featureResult"></div>
+    <!-- Bus Details Panel (hidden by default) -->
+    <div id="busDetailsPanel" class="panel hidden">
+      <div class="panel-header">
+        <span id="detailTitle">Bus Details</span>
+        <button id="closeBusDetails" class="closeBtn">&times;</button>
+      </div>
+      <div class="panel-content">
+        <div id="detailContent"></div>
+      </div>
     </div>
   </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- JavaScript Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="firebase.js"></script>
   <script type="module" src="main.js"></script>
 </body>
