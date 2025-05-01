@@ -341,7 +341,7 @@ function showFeatureData() {
             <div class="gauge-fill gauge-fuel" style="--value:${Math.min(b.fuel || 0, 100).toFixed(2)}"></div>
             <div class="gauge-label">
               <span>Fuel</span>
-              <span class="gauge-value">${b.fuel.toFixed(2)} km/h</span>
+              <span class="gauge-value">${b.fuel.toFixed(2)} %</span>
             </div>
           </div>
            
